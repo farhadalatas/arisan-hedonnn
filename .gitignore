@@ -1,0 +1,20 @@
+# Local application data
+arisan-hedonnn.db
+arisan-hedonnn.db-*
+arisan-live-session.json
+arisan-server.pid
+
+# Runtime output
+*.log
+__pycache__/
+*.py[cod]
+
+# Local configuration
+.env
+production.env
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

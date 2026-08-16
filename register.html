@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Daftar - Arisan Hedonnn</title><link rel="stylesheet" href="/site.css"><script src="/site.js" defer></script></head>
+<body data-page="register" class="auth-page">
+  <main class="auth-shell wide-auth">
+    <a class="site-brand auth-brand" href="/"><span class="brand-box">AH</span><span>Arisan <b>Hedonnn</b></span></a>
+    <a class="back-home" href="/">&larr; Kembali ke homepage</a>
+    <section class="auth-card">
+      <div class="auth-intro"><span class="eyebrow">Mulai versi lokal</span><h1>Buat workspace pertama</h1><p>Akun, workspace, dan acara pertama akan dibuat langsung di database lokal.</p></div>
+      <form id="registerForm" class="auth-form two-col-form" novalidate>
+        <label>Nama lengkap<input id="registerName" name="name" type="text" autocomplete="name" minlength="2" maxlength="80" placeholder="Nama lo" required></label>
+        <label>Nama workspace<input id="registerWorkspace" name="workspace" type="text" maxlength="80" placeholder="Contoh: Hedonnn Event"></label>
+        <label class="span-two">Email<input id="registerEmail" name="email" type="email" autocomplete="email" maxlength="254" placeholder="nama@email.com" required></label>
+        <label>Password<input id="registerPassword" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="128" placeholder="Minimal 10 karakter" required></label>
+        <label>Ulangi password<input id="registerConfirm" name="confirm" type="password" autocomplete="new-password" minlength="10" maxlength="128" placeholder="Ketik ulang password" required></label>
+        <label class="check-label span-two"><input id="termsCheck" type="checkbox" required><span>Gue memahami ini masih versi lokal dan data hanya tersedia di komputer ini.</span></label>
+        <button class="button full-button span-two" type="submit">Buat akun & workspace</button><p class="form-feedback span-two" id="formFeedback" role="alert"></p>
+      </form>
+      <p class="auth-switch">Sudah punya akun? <a href="/login">Masuk di sini</a></p>
+    </section>
+  </main>
+</body></html>

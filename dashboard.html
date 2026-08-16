@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard - Arisan Hedonnn</title><link rel="stylesheet" href="/site.css"><script src="/site.js" defer></script></head>
+<body data-page="dashboard" class="dashboard-page">
+  <header class="dashboard-header"><a class="site-brand" href="/"><span class="brand-box">AH</span><span>Arisan <b>Hedonnn</b></span></a><div class="dashboard-account"><div><strong id="accountName">Memuat...</strong><span id="accountEmail"></span></div><button class="button button-ghost button-small" id="logoutBtn" type="button">Keluar</button></div></header>
+  <main class="dashboard-shell">
+    <section class="dashboard-hero"><div><span class="eyebrow">Workspace lokal</span><h1 id="workspaceGreeting">Acara lo, rapi di satu tempat.</h1><p id="workspaceMeta">Memuat database...</p></div><button class="button" id="openCreateEvent" type="button">+ Buat acara</button></section>
+    <section class="dashboard-stats"><article><span>Total acara</span><strong id="totalEvents">0</strong></article><article><span>Total peserta</span><strong id="totalParticipants">0</strong></article><article><span>Total pemenang</span><strong id="totalWinners">0</strong></article><article><span>Status database</span><strong class="status-good">Aktif</strong></article></section>
+    <section class="event-section"><div class="section-row"><div><h2>Acara terbaru</h2><p>Pilih acara untuk masuk ke panggung operator.</p></div></div><div class="event-grid" id="eventGrid"><div class="loading-card">Memuat acara...</div></div></section>
+    <section class="local-notice"><div><strong>Versi lokal aktif</strong><p>Database tersimpan sebagai <code>arisan-hedonnn.db</code> di folder aplikasi. Backup file itu secara berkala.</p></div><a href="/" class="text-link">Lihat homepage</a></section>
+  </main>
+  <div class="dialog-backdrop" id="eventDialog" hidden><form class="dialog-card" id="eventForm"><div><span class="eyebrow">Acara baru</span><h2>Buat ruang kocokan</h2><p>Setiap acara memiliki data peserta dan hasil sendiri.</p></div><label>Nama acara<input id="eventName" type="text" minlength="2" maxlength="80" placeholder="Contoh: Arisan Agustus 2026" required autofocus></label><div class="dialog-actions"><button class="button" type="submit">Buat & buka</button><button class="button button-ghost" id="cancelEvent" type="button">Batal</button></div><p class="form-feedback" id="eventFeedback" role="alert"></p></form></div>
+</body></html>

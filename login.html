@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Masuk - Arisan Hedonnn</title><link rel="stylesheet" href="/site.css"><script src="/site.js" defer></script></head>
+<body data-page="login" class="auth-page">
+  <main class="auth-shell">
+    <a class="site-brand auth-brand" href="/"><span class="brand-box">AH</span><span>Arisan <b>Hedonnn</b></span></a>
+    <a class="back-home" href="/">&larr; Kembali ke homepage</a>
+    <section class="auth-card">
+      <div class="auth-intro"><span class="eyebrow">Selamat datang lagi</span><h1>Masuk ke workspace lo</h1><p>Lanjutkan acara, peserta, dan riwayat yang tersimpan di database lokal.</p></div>
+      <form id="loginForm" class="auth-form" novalidate>
+        <label>Email<input id="loginEmail" name="email" type="email" autocomplete="email" maxlength="254" placeholder="nama@email.com" required></label>
+        <label>Password<input id="loginPassword" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="128" placeholder="Minimal 10 karakter" required></label>
+        <button class="button full-button" type="submit">Masuk</button><p class="form-feedback" id="formFeedback" role="alert"></p>
+      </form>
+      <p class="auth-switch">Belum punya akun? <a href="/register">Daftar gratis</a></p>
+    </section>
+    <p class="auth-note">Akun ini berjalan lokal di komputer lo. Belum tersambung ke cloud.</p>
+  </main>
+</body></html>

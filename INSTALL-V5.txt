@@ -1,0 +1,12 @@
+ARISAN HEDONNN V5 LOCAL - CARA PASANG
+
+1. Klik STOP ARISAN.bat di folder aplikasi lama.
+2. Backup folder C:\Users\farha\Documents\arisan-hedonnn.
+3. Ekstrak seluruh isi ZIP V5 ke folder tersebut dan izinkan Replace/Overwrite.
+4. Jangan menyalin file arisan-hedonnn.db dari tempat lain. Database dibuat otomatis.
+5. Klik START ARISAN.bat.
+6. Chrome akan membuka homepage http://127.0.0.1:8081/
+7. Klik Mulai Gratis dan buat akun lokal pertama.
+
+Data sesi lama dari arisan-live-session.json akan diimpor ke Acara Pertama milik akun pertama.
+Setelah database dibuat, backup arisan-hedonnn.db secara berkala saat server sedang berhenti.

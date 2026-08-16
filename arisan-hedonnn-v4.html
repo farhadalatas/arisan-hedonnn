@@ -1,0 +1,2133 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arisan Hedonnn</title>
+</head>
+<body>
+<div id="app" class="app-shell">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #221b16;
+      --muted: #746b61;
+      --line: #d8cab9;
+      --paper: #fff8e8;
+      --paper-2: #f5ead2;
+      --green: #315c49;
+      --rose: #9e3f4d;
+      --gold: #c9872f;
+      --blue: #2f587d;
+      --cream: #f7efe1;
+      --shadow: 0 18px 45px rgba(53, 39, 23, 0.16);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(201,135,47,.16), transparent 24rem),
+        linear-gradient(135deg, #f8f0e3 0%, #e7f0ed 52%, #f5e9ef 100%);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    .app-shell { width: min(1440px, 100%); margin: 0 auto; padding: 24px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 240px; }
+    .brand-mark {
+      display: grid; width: 54px; height: 54px; place-items: center;
+      border: 1px solid rgba(34,27,22,.15); border-radius: 14px;
+      background: linear-gradient(145deg, var(--rose), var(--gold) 54%, var(--green)); color: #fffdf7;
+      box-shadow: var(--shadow); font-weight: 950; letter-spacing: .02em;
+      transform: rotate(-4deg);
+    }
+    h1 {
+      margin: 0;
+      font-family: "Cooper Black", "Trebuchet MS", "Arial Rounded MT Bold", ui-sans-serif, system-ui, sans-serif;
+      font-size: clamp(2rem, 4.4vw, 4.2rem);
+      line-height: .9;
+      letter-spacing: .01em;
+      color: var(--rose);
+      text-shadow: 2px 2px 0 #fff3c4, 5px 5px 0 rgba(49,92,73,.18);
+    }
+    .subtitle { margin: 5px 0 0; color: var(--muted); font-size: .94rem; }
+    .session-pill {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border: 1px solid rgba(34,27,22,.12); border-radius: 999px;
+      background: rgba(255,255,255,.5); color: var(--muted); white-space: nowrap;
+    }
+    .status-dot { width: 10px; height: 10px; border-radius: 99px; background: var(--green); box-shadow: 0 0 0 6px rgba(49,92,73,.13); }
+    .layout { display: grid; grid-template-columns: minmax(270px,340px) minmax(360px,1fr) minmax(300px,380px); gap: 18px; align-items: start; }
+    .panel { border: 1px solid rgba(34,27,22,.13); border-radius: 8px; background: rgba(255,252,246,.78); box-shadow: var(--shadow); backdrop-filter: blur(14px); }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 16px 10px; border-bottom: 1px solid rgba(34,27,22,.08); }
+    .panel-header h2 { margin: 0; font-size: 1rem; letter-spacing: 0; }
+    .panel-body { padding: 16px; }
+    .field { display: grid; gap: 8px; margin-bottom: 12px; }
+    .field label, .tiny-label { color: var(--muted); font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    input, textarea, select {
+      width: 100%; border: 1px solid var(--line); border-radius: 8px;
+      background: rgba(255,255,255,.82); color: var(--ink); outline: none;
+    }
+    input, select { height: 42px; padding: 0 12px; }
+    textarea { min-height: 98px; resize: vertical; padding: 11px 12px; line-height: 1.45; }
+    input:focus, textarea:focus, select:focus { border-color: var(--green); box-shadow: 0 0 0 4px rgba(49,92,73,.12); }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn {
+      display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 8px;
+      border: 1px solid rgba(34,27,22,.14); border-radius: 8px; padding: 0 13px;
+      background: rgba(255,255,255,.74); color: var(--ink); font-weight: 700;
+      transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 9px 20px rgba(53,39,23,.13); }
+    .btn-primary { border-color: var(--green); background: var(--green); color: #fffdf7; }
+    .btn-danger { border-color: rgba(158,63,77,.35); color: var(--rose); }
+    .btn:disabled { cursor: not-allowed; opacity: .55; transform: none; box-shadow: none; }
+    .mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 5px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.58); }
+    .mode-switch button { min-height: 38px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); font-weight: 800; }
+    .mode-switch button.active { background: var(--ink); color: #fffdf7; }
+    .participant-list, .history-list { display: grid; gap: 8px; max-height: 310px; overflow: auto; padding-right: 3px; }
+    .person-item, .history-item {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 42px;
+      border: 1px solid rgba(34,27,22,.1); border-radius: 8px; padding: 9px 10px;
+      background: rgba(255,255,255,.55);
+    }
+    .person-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 750; }
+    .small-action { border: 0; border-radius: 7px; padding: 6px 8px; background: rgba(158,63,77,.1); color: var(--rose); font-weight: 800; }
+    .stage { position: relative; min-height: 690px; overflow: hidden; padding: 18px; }
+    .stage-top {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(105px, 1fr));
+      gap: 12px;
+      flex: 1 1 390px;
+      align-items: stretch;
+    }
+    .stat {
+      display: flex;
+      min-height: 86px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid rgba(34,27,22,.12);
+      border-radius: 8px;
+      padding: 12px 10px;
+      background: rgba(255,255,255,.62);
+      text-align: center;
+    }
+    .stat .tiny-label {
+      width: 100%;
+      min-height: 1.9em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.15;
+      text-wrap: balance;
+    }
+    .stat-value {
+      width: 100%;
+      min-height: 1.3em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0;
+      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+      font-weight: 950;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .jar-zone {
+      position: relative; display: grid; min-height: 445px; place-items: center; border-radius: 8px;
+      background: linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,0)), radial-gradient(circle at 50% 80%, rgba(49,92,73,.16), transparent 18rem);
+    }
+    .jar-wrap { position: relative; width: min(420px, 88vw); height: 400px; transform-origin: 50% 72%; }
+    .jar-wrap.shaking { animation: shakeJar 150ms linear infinite; }
+    .surprise-panel {
+      position: absolute; z-index: 8; left: 50%; top: 50%; display: grid; gap: 8px;
+      width: min(460px, calc(100% - 28px)); place-items: center; padding: 18px;
+      border: 2px solid rgba(201,135,47,.42); border-radius: 12px;
+      background: rgba(255,252,246,.9); box-shadow: 0 22px 48px rgba(53,39,23,.22);
+      text-align: center; transform: translate(-50%, -50%) scale(.92); opacity: 0;
+      pointer-events: none; transition: opacity 220ms ease, transform 220ms ease;
+    }
+    .surprise-panel.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .countdown-number {
+      color: var(--rose);
+      font-family: "Cooper Black", "Trebuchet MS", "Arial Rounded MT Bold", ui-sans-serif, system-ui, sans-serif;
+      font-size: clamp(4.5rem, 13vw, 8rem); font-weight: 950; line-height: .82;
+      text-shadow: 2px 2px 0 #fff3c4, 6px 6px 0 rgba(49,92,73,.16);
+      animation: countdownPop 720ms cubic-bezier(.16,1.18,.38,1);
+    }
+    .surprise-text { color: var(--green); font-size: clamp(1.05rem, 2.4vw, 1.55rem); font-weight: 950; text-transform: uppercase; }
+    .jar-lid {
+      position: absolute; z-index: 4; top: 20px; left: 50%; width: 210px; height: 38px;
+      border: 2px solid rgba(34,27,22,.24); border-radius: 8px 8px 18px 18px;
+      background: linear-gradient(180deg, #d9a65b, #a86135); transform: translateX(-50%);
+      box-shadow: 0 12px 26px rgba(53,39,23,.16);
+    }
+    .jar-mouth {
+      position: absolute; z-index: 3; top: 50px; left: 50%; width: 182px; height: 36px;
+      border: 2px solid rgba(47,88,125,.26); border-radius: 50%;
+      background: rgba(255,255,255,.36); transform: translateX(-50%);
+    }
+    .jar {
+      position: absolute; inset: 70px 54px 22px; overflow: hidden;
+      border: 3px solid rgba(47,88,125,.34); border-radius: 38% 38% 24% 24% / 16% 16% 18% 18%;
+      background: linear-gradient(105deg, rgba(255,255,255,.55) 0 11%, transparent 12% 26%, rgba(255,255,255,.24) 27% 34%, transparent 35%), linear-gradient(180deg, rgba(196,224,229,.45), rgba(221,238,234,.23));
+      box-shadow: inset 0 0 36px rgba(255,255,255,.58), inset 0 -36px 60px rgba(49,92,73,.12), 0 26px 46px rgba(53,39,23,.18);
+    }
+    .paper {
+      position: absolute; display: flex; width: 86px; height: 34px; align-items: center; justify-content: center;
+      border: 1px solid rgba(111,82,48,.18); border-radius: 5px;
+      background: linear-gradient(145deg, var(--paper), var(--paper-2)); color: #5c412d;
+      font-size: .76rem; font-weight: 800; text-align: center; box-shadow: 0 5px 11px rgba(53,39,23,.12);
+      transform: translate(var(--x), var(--y)) rotate(var(--r));
+      animation: paperFloat var(--float-duration) ease-in-out infinite alternate;
+      animation-delay: var(--delay);
+    }
+    .jar-wrap.shaking .paper {
+      animation: paperScatter var(--shake-duration) cubic-bezier(.28,.04,.42,1) infinite alternate;
+      animation-delay: var(--delay);
+    }
+    .winner-card {
+      position: fixed; z-index: 9999; left: 50%; top: 50%; display: grid;
+      width: min(620px, calc(100vw - 28px)); gap: 8px; border: 2px solid rgba(201,135,47,.45);
+      border-radius: 10px; padding: 20px; background: linear-gradient(145deg, rgba(255,252,246,.98), rgba(255,244,203,.96));
+      box-shadow: 0 28px 60px rgba(53,39,23,.24), 0 0 0 8px rgba(255,255,255,.32);
+      text-align: center; transform: translate(-50%, calc(-50% + 18px)); opacity: 0; pointer-events: none;
+      transition: opacity 300ms ease, transform 300ms ease;
+    }
+    .winner-card.show { opacity: 1; transform: translate(-50%, -50%); pointer-events: auto; animation: winnerPop 680ms cubic-bezier(.16,1.18,.38,1); }
+    .winner-label { color: var(--rose); font-size: clamp(.95rem, 2vw, 1.35rem); font-weight: 950; letter-spacing: .04em; text-transform: uppercase; }
+    .winner-name {
+      display: inline-block;
+      justify-self: center;
+      max-width: 100%;
+      color: var(--green);
+      font-family: "Cooper Black", "Trebuchet MS", "Arial Rounded MT Bold", ui-sans-serif, system-ui, sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.6rem);
+      font-weight: 950; line-height: .95; overflow-wrap: normal; white-space: nowrap;
+      transform: scaleX(var(--winner-scale, 1));
+      transform-origin: center;
+      text-shadow: 2px 2px 0 #fff3c4, 4px 4px 0 rgba(158,63,77,.16);
+    }
+    #winnerSub { color: var(--ink); font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 850; }
+    .winner-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; pointer-events: none; }
+    .winner-card.show .winner-actions { pointer-events: auto; }
+    .confetti-layer { position: fixed; inset: 0; z-index: 9998; overflow: hidden; pointer-events: none; }
+    .confetti-piece {
+      position: absolute; top: 42%; left: 50%; width: 10px; height: 16px;
+      border-radius: 2px; background: var(--confetti-color);
+      transform: translate(-50%, -50%) rotate(0deg);
+      animation: confettiBurst 1050ms cubic-bezier(.16,.84,.28,1) forwards;
+      animation-delay: var(--delay);
+    }
+    .stage-actions { display: grid; justify-items: center; gap: 10px; margin-top: 18px; }
+    .shake-button { min-width: min(340px, 100%); min-height: 62px; border-radius: 8px; font-size: 1.15rem; }
+    .secondary-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
+    .sound-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+    .local-player {
+      display: grid; gap: 10px; width: min(680px, 100%);
+      border: 1px solid rgba(34,27,22,.12); border-radius: 8px; padding: 12px;
+      background: rgba(255,255,255,.5);
+    }
+    .player-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
+    .player-volume { display: flex; align-items: center; gap: 8px; min-width: min(240px, 100%); }
+    .player-volume input { width: 150px; }
+    .file-name { color: var(--muted); font-size: .86rem; text-align: center; overflow-wrap: anywhere; }
+    .track-list { display: grid; gap: 6px; max-height: 120px; overflow: auto; }
+    .track-item { display: flex; justify-content: space-between; gap: 10px; border: 1px solid rgba(34,27,22,.1); border-radius: 8px; padding: 8px 10px; background: rgba(255,255,255,.56); color: var(--muted); font-size: .86rem; }
+    .track-item.active { color: var(--ink); border-color: rgba(49,92,73,.35); background: rgba(49,92,73,.1); font-weight: 800; }
+    .player-chip {
+      display: inline-flex; align-items: center; gap: 6px; min-height: 34px;
+      border: 1px solid rgba(34,27,22,.12); border-radius: 999px; padding: 0 10px;
+      background: rgba(255,255,255,.62); color: var(--ink); font-size: .86rem; font-weight: 700;
+    }
+    .player-chip input { width: 16px; height: 16px; padding: 0; accent-color: var(--green); }
+    .sound-note { color: var(--muted); font-size: .86rem; text-align: center; }
+    .empty-note { color: var(--muted); text-align: center; padding: 22px 10px; }
+    .guide-panel { display: flex; min-height: 690px; flex-direction: column; }
+    .guide-face { display: flex; align-items: center; gap: 12px; }
+    .avatar { display: grid; width: 42px; height: 42px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--blue)); color: #fffdf7; font-weight: 950; }
+    .chat-log { display: flex; flex: 1; flex-direction: column; gap: 10px; min-height: 320px; max-height: 450px; overflow: auto; padding: 16px; }
+    .message { max-width: 88%; border-radius: 8px; padding: 10px 12px; line-height: 1.45; font-size: .92rem; }
+    .message.ai { align-self: flex-start; background: rgba(49,92,73,.11); color: var(--ink); }
+    .message.user { align-self: flex-end; background: var(--green); color: #fffdf7; }
+    .chat-form { display: grid; gap: 10px; padding: 14px 16px 16px; border-top: 1px solid rgba(34,27,22,.08); }
+    .quick-questions { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 12px; }
+    .quick-questions button { border: 1px solid rgba(34,27,22,.12); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,.65); color: var(--muted); font-size: .82rem; font-weight: 700; }
+    @keyframes shakeJar {
+      0% { transform: translate(0,0) rotate(0deg); }
+      20% { transform: translate(-7px,4px) rotate(-4deg); }
+      40% { transform: translate(8px,-3px) rotate(5deg); }
+      60% { transform: translate(-5px,-5px) rotate(2deg); }
+      80% { transform: translate(6px,5px) rotate(-5deg); }
+      100% { transform: translate(0,0) rotate(0deg); }
+    }
+    @keyframes paperFloat {
+      0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); }
+      45% { transform: translate(calc(var(--x) + var(--fx1)), calc(var(--y) + var(--fy1))) rotate(calc(var(--r) + var(--fr1))); }
+      100% { transform: translate(calc(var(--x) + var(--fx2)), calc(var(--y) + var(--fy2))) rotate(calc(var(--r) + var(--fr2))); }
+    }
+    @keyframes paperScatter {
+      0% { transform: translate(calc(var(--x) + var(--sx1)), calc(var(--y) + var(--sy1))) rotate(calc(var(--r) + var(--sr1))); }
+      28% { transform: translate(calc(var(--x) + var(--sx2)), calc(var(--y) + var(--sy2))) rotate(calc(var(--r) + var(--sr2))); }
+      62% { transform: translate(calc(var(--x) + var(--sx3)), calc(var(--y) + var(--sy3))) rotate(calc(var(--r) + var(--sr3))); }
+      100% { transform: translate(calc(var(--x) + var(--sx4)), calc(var(--y) + var(--sy4))) rotate(calc(var(--r) + var(--sr4))); }
+    }
+    @keyframes countdownPop {
+      0% { transform: scale(.55) rotate(-5deg); opacity: .35; }
+      58% { transform: scale(1.12) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0); opacity: 1; }
+    }
+    @keyframes winnerPop {
+      0% { transform: translate(-50%, calc(-50% + 20px)) scale(.84) rotate(-2deg); }
+      58% { transform: translate(-50%, calc(-50% - 5px)) scale(1.05) rotate(1deg); }
+      100% { transform: translate(-50%, -50%) scale(1) rotate(0); }
+    }
+    @keyframes confettiBurst {
+      0% { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(.7); }
+      74% { opacity: 1; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--spin)) scale(1); }
+    }
+    @media (max-width: 1120px) {
+      .layout { grid-template-columns: 1fr 1fr; }
+      .stage { grid-column: 1 / -1; order: -1; }
+    }
+    @media (max-width: 760px) {
+      .app-shell { padding: 14px; }
+      .topbar, .layout { display: grid; grid-template-columns: 1fr; }
+      .session-pill { white-space: normal; }
+      .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); flex-basis: 100%; }
+      .stage, .guide-panel { min-height: auto; }
+      .jar-zone { min-height: 390px; }
+      .jar-wrap { width: min(340px, 94vw); height: 360px; }
+    }
+
+    /* V4: panggung lapang, alat bantu muncul saat dibutuhkan */
+    body { background: radial-gradient(circle at 50% -20%, #fff4d0 0, transparent 42%), linear-gradient(145deg,#f5ead9,#e8f1ec 55%,#f3e7ec); }
+    .app-shell { width: min(1680px,100%); padding: 18px 24px 28px; }
+    .topbar { position: sticky; top: 0; z-index: 90; margin: 0 -8px 18px; padding: 10px 12px; border: 1px solid rgba(34,27,22,.1); border-radius: 16px; background: rgba(255,252,246,.88); box-shadow: 0 12px 30px rgba(53,39,23,.1); backdrop-filter: blur(18px); }
+    .brand-mark { width: 46px; height: 46px; border-radius: 13px; }
+    h1 { font-size: clamp(1.75rem,3.1vw,3rem); }
+    .top-actions { display:flex; min-width:0; align-items:center; justify-content:flex-end; }
+    .session-pill { max-width:min(430px,44vw); min-width:0; }
+    .session-pill span:last-child { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+    .icon-btn { min-height:42px; border-radius:11px; padding:0 14px; }
+    .layout-v4 { display:grid; grid-template-columns:300px minmax(0,1fr); gap:18px; align-items:stretch; transition:grid-template-columns .24s ease; }
+    .layout-v4.sidebar-collapsed { grid-template-columns:72px minmax(0,1fr); }
+    .stage { min-height: calc(100vh - 135px); padding:18px 22px 20px; border-radius:18px; }
+    .stage-top { position:relative; z-index:5; left:auto; right:auto; top:auto; width:min(520px,100%); margin:2px auto 8px; pointer-events:none; }
+    .stat-grid { width:100%; max-width:none; flex:0 0 auto; grid-template-columns:repeat(3,1fr); gap:9px; padding:7px; border:1px solid rgba(34,27,22,.09); border-radius:17px; background:rgba(255,250,239,.7); box-shadow:0 12px 28px rgba(53,39,23,.1); backdrop-filter:blur(14px); }
+    .stat { position:relative; min-height:68px; padding:9px 8px 8px; overflow:hidden; border:0; border-radius:12px; background:rgba(255,255,255,.88); box-shadow:inset 0 0 0 1px rgba(34,27,22,.07); backdrop-filter:blur(12px); }
+    .stat::before { content:""; position:absolute; left:18%; right:18%; top:0; height:3px; border-radius:0 0 4px 4px; background:var(--gold); }
+    .stat:nth-child(2)::before { background:var(--green); }
+    .stat:nth-child(3)::before { background:var(--rose); }
+    .stat-value { font-size:clamp(1.5rem,2.5vw,2rem); }
+    .jar-zone { min-height:clamp(520px,60vh,680px); padding-top:0; border-radius:16px; background:radial-gradient(ellipse at 50% 80%,rgba(49,92,73,.2),transparent 48%),linear-gradient(180deg,rgba(255,255,255,.2),transparent); }
+    .jar-wrap { width:min(690px,78vw); height:min(590px,58vh); min-height:470px; }
+    .jar-lid { top:22px; width:310px; height:48px; border-radius:12px 12px 24px 24px; }
+    .jar-mouth { top:62px; width:275px; height:48px; }
+    .jar { inset:98px 58px 20px; border-width:4px; }
+    .paper { width:104px; height:40px; font-size:.82rem; }
+    .stage-actions { position:relative; z-index:6; left:auto; bottom:auto; display:grid; grid-template-columns:minmax(270px,420px) minmax(0,1fr); width:min(920px,100%); align-items:center; gap:12px; margin:14px auto 0; padding:12px; border:1px solid rgba(34,27,22,.1); border-radius:17px; background:rgba(255,252,246,.86); box-shadow:0 14px 30px rgba(53,39,23,.11); backdrop-filter:blur(14px); transform:none; }
+    .shake-button { width:100%; min-width:0; min-height:62px; border-radius:14px; font-size:1.18rem; box-shadow:0 12px 24px rgba(49,92,73,.24); }
+    .secondary-actions { display:flex; align-items:center; justify-content:flex-end; gap:7px; padding:0; border-radius:0; background:transparent; backdrop-filter:none; }
+    .secondary-actions .btn { flex:1 1 118px; min-height:42px; padding-inline:10px; }
+    .stage-actions #saveSessionBtn, .stage-actions #loadSessionBtn, .stage-actions #resetSessionBtn { display:none; }
+    .workspace-sidebar { position:sticky; top:94px; display:flex; height:calc(100vh - 118px); min-height:620px; flex-direction:column; overflow:hidden; border-radius:18px; }
+    .sidebar-tools { flex:0 0 auto; padding:14px 12px 12px; border-bottom:1px solid rgba(34,27,22,.09); background:linear-gradient(145deg,rgba(255,255,255,.62),rgba(247,239,225,.5)); }
+    .sidebar-tools-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .sidebar-tools-head strong { font-size:.94rem; }
+    .sidebar-toggle { width:36px; min-width:36px; min-height:36px; padding:0; border-radius:10px; font-size:1.15rem; }
+    .sidebar-tools-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+    .sidebar-tools-grid .btn { min-width:0; min-height:43px; padding:0 9px; border-radius:11px; font-size:.78rem; line-height:1.1; }
+    .sidebar-tools-grid .btn span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .sidebar-tools-grid .btn-primary { box-shadow:0 8px 18px rgba(49,92,73,.16); }
+    .sidebar-tools-grid #drawBtn, .sidebar-tools-grid #saveHistoryBtn { grid-column:1 / -1; }
+    .sidebar-tools-grid #drawBtn { min-height:58px; font-size:.98rem; }
+    .sidebar-tools-grid .auth-status { grid-column:1 / -1; }
+    .layout-v4.sidebar-collapsed .workspace-sidebar { min-height:0; }
+    .layout-v4.sidebar-collapsed .sidebar-tools { display:flex; height:100%; min-height:74px; align-items:flex-start; justify-content:center; padding:10px 7px; border-bottom:0; }
+    .layout-v4.sidebar-collapsed .sidebar-tools-head { margin:0; }
+    .layout-v4.sidebar-collapsed .sidebar-tools-head strong,
+    .layout-v4.sidebar-collapsed .sidebar-tools-grid,
+    .layout-v4.sidebar-collapsed .side-menu,
+    .layout-v4.sidebar-collapsed .side-panel { display:none; }
+    .layout-v4.sidebar-collapsed .sidebar-toggle { width:48px; min-width:48px; min-height:48px; }
+    .side-menu { display:grid; grid-template-columns:1fr 1fr; gap:7px; padding:12px; border-bottom:1px solid rgba(34,27,22,.08); }
+    .side-tab { min-height:44px; border:1px solid rgba(34,27,22,.1); border-radius:11px; background:rgba(255,255,255,.65); color:var(--muted); font-weight:850; }
+    .side-tab.active { border-color:var(--green); background:var(--green); color:#fff; }
+    .side-panel { display:none; min-height:0; flex:1; flex-direction:column; }
+    .side-panel.active { display:flex; }
+    .side-panel .history-list, .activity-list { max-height:none; min-height:0; flex:1; overflow:auto; padding:12px; }
+    .activity-list { display:grid; align-content:start; gap:9px; }
+    .activity-item { display:grid; grid-template-columns:9px 1fr; gap:9px; border:1px solid rgba(34,27,22,.09); border-radius:11px; padding:10px; background:rgba(255,255,255,.58); }
+    .activity-dot { width:9px; height:9px; margin-top:5px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(201,135,47,.12); }
+    .activity-text { font-size:.87rem; line-height:1.35; }
+    .activity-time { margin-top:3px; color:var(--muted); font-size:.72rem; }
+    .drawer-backdrop { position:fixed; inset:0; z-index:200; background:rgba(29,24,20,.34); opacity:0; pointer-events:none; transition:opacity .2s ease; }
+    .drawer-backdrop.show { opacity:1; pointer-events:auto; }
+    .drawer { position:fixed; z-index:210; top:0; bottom:0; left:0; width:min(440px,94vw); padding:20px; overflow:auto; background:#fffaf0; box-shadow:24px 0 60px rgba(34,27,22,.22); transform:translateX(-104%); transition:transform .25s ease; }
+    .drawer.right { right:0; left:auto; transform:translateX(104%); }
+    .drawer.show { transform:translateX(0); }
+    .drawer-head { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:18px; }
+    .drawer-head h2 { margin:0; font-size:1.35rem; }
+    .drawer .participant-list { max-height:none; margin-top:16px; }
+    .session-list { display:grid; gap:10px; margin-top:18px; }
+    .session-card { display:grid; gap:7px; border:1px solid rgba(34,27,22,.11); border-radius:12px; padding:13px; background:#fff; }
+    .session-card.active { border-color:var(--green); box-shadow:0 0 0 3px rgba(49,92,73,.1); }
+    .session-card-top { display:flex; align-items:start; justify-content:space-between; gap:10px; }
+    .session-card-actions { display:flex; gap:7px; flex-wrap:wrap; }
+    .music-popover { position:fixed; z-index:180; top:84px; right:24px; display:none; width:min(440px,calc(100vw - 28px)); border:1px solid rgba(34,27,22,.12); border-radius:16px; padding:15px; background:#fffaf0; box-shadow:var(--shadow); }
+    .music-popover.show { display:block; }
+    .music-popover .local-player { width:100%; }
+    .chat-fab { position:fixed; right:24px; bottom:24px; z-index:300; width:62px; height:62px; border:0; border-radius:50%; background:linear-gradient(145deg,var(--rose),var(--green)); color:#fff; font-weight:950; box-shadow:0 16px 34px rgba(53,39,23,.28); }
+    .chat-unread { position:absolute; right:-3px; top:-4px; display:none; min-width:23px; height:23px; place-items:center; border:2px solid #fff; border-radius:99px; background:#e43f5a; font-size:.72rem; }
+    .chat-unread.show { display:grid; }
+    .chat-widget { position:fixed; z-index:290; right:24px; bottom:98px; display:flex; width:min(390px,calc(100vw - 28px)); height:min(610px,calc(100vh - 130px)); flex-direction:column; border:1px solid rgba(34,27,22,.13); border-radius:20px; background:#fffaf0; box-shadow:0 24px 60px rgba(53,39,23,.25); opacity:0; pointer-events:none; transform:translateY(16px) scale(.97); transition:.2s ease; overflow:hidden; }
+    .chat-widget.show { opacity:1; pointer-events:auto; transform:none; }
+    .chat-widget .panel-header { padding:14px 16px; }
+    .chat-widget .chat-log { min-height:0; max-height:none; }
+    .chat-widget .chat-form { grid-template-columns:1fr auto; }
+    .chat-widget .quick-questions { padding-top:10px; }
+    .modal { position:fixed; z-index:10050; inset:0; display:none; place-items:center; padding:18px; background:rgba(29,24,20,.38); }
+    .modal.show { display:grid; }
+    .modal-card { width:min(480px,100%); border-radius:18px; padding:20px; background:#fffaf0; box-shadow:0 28px 70px rgba(34,27,22,.3); }
+    .modal-card h2 { margin:0 0 6px; }
+    .auth-status { border-color:rgba(49,92,73,.25); color:var(--green); }
+    .auth-status.locked { border-color:rgba(158,63,77,.3); color:var(--rose); }
+    .record-mode.active { border-color:#b72f46; background:#fff0f2; color:#9e2439; box-shadow:inset 0 0 0 1px rgba(183,47,70,.08); }
+    .record-folder.ready { border-color:rgba(49,92,73,.35); color:var(--green); }
+    .recording-badge { position:fixed; z-index:10020; top:88px; left:50%; display:none; align-items:center; gap:10px; max-width:calc(100vw - 28px); padding:9px 11px 9px 13px; border:1px solid rgba(130,24,43,.22); border-radius:999px; background:rgba(72,15,25,.94); color:#fff; box-shadow:0 15px 38px rgba(72,15,25,.28); transform:translateX(-50%); backdrop-filter:blur(12px); }
+    .recording-badge.show { display:flex; }
+    .recording-dot { width:10px; height:10px; flex:0 0 auto; border-radius:50%; background:#ff536c; box-shadow:0 0 0 5px rgba(255,83,108,.16); animation:recordPulse 1.2s ease-in-out infinite; }
+    .recording-copy { min-width:0; font-size:.8rem; font-weight:850; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .recording-badge .btn { min-height:32px; padding:0 11px; border-color:rgba(255,255,255,.25); background:rgba(255,255,255,.12); color:#fff; }
+    @keyframes recordPulse { 50% { opacity:.45; transform:scale(.78); } }
+    .login-feedback { min-height:1.4em; margin:10px 0 0; color:var(--rose); font-size:.86rem; }
+    @media (max-width:1180px) { .layout-v4{grid-template-columns:260px minmax(0,1fr);gap:12px}.app-shell{padding-inline:14px}.workspace-sidebar{top:92px}.jar-wrap{width:min(590px,70vw)}.sidebar-tools-grid .btn{font-size:.72rem;padding-inline:7px} }
+    @media (max-width:860px) { .layout-v4,.layout-v4.sidebar-collapsed{grid-template-columns:1fr}.workspace-sidebar{position:relative;top:auto;height:auto;min-height:0;order:0}.layout-v4.sidebar-collapsed .workspace-sidebar{width:64px;height:64px;justify-self:start}.layout-v4.sidebar-collapsed .sidebar-tools{min-height:64px}.sidebar-tools-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.sidebar-tools-grid #drawBtn,.sidebar-tools-grid #saveHistoryBtn{grid-column:auto}.sidebar-tools-grid .auth-status{grid-column:auto}.side-panel{max-height:260px}.stage{order:1;min-height:780px}.side-menu{grid-template-columns:1fr 1fr}.jar-wrap{width:min(620px,92vw)}.secondary-actions{justify-content:center} }
+    @media (max-width:720px) { .app-shell{padding:10px}.topbar{position:relative;align-items:start}.brand{min-width:0}.brand .subtitle{display:none}.top-actions{width:100%;justify-content:flex-start}.session-pill{width:100%;max-width:none}.stage{min-height:720px;padding:12px}.jar-zone{min-height:530px}.jar-wrap{width:min(430px,94vw);height:450px;min-height:420px}.jar-lid{width:210px;height:40px}.jar-mouth{top:55px;width:185px;height:40px}.jar{inset:78px 28px 20px}.stage-top{width:min(430px,100%);margin-bottom:6px}.stage-actions{bottom:auto;margin-top:8px;padding:9px}.chat-fab{right:14px;bottom:14px}.chat-widget{right:14px;bottom:86px}.music-popover{right:14px;top:14px}.recording-badge{top:14px}.secondary-actions .btn{min-height:36px;font-size:.74rem;padding:0 8px}.stat{min-height:58px}.stat-grid{gap:6px;padding:5px}.paper{width:84px;height:34px;font-size:.7rem} }
+    @media (max-width:520px) { .sidebar-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar-tools-grid #drawBtn,.sidebar-tools-grid #saveHistoryBtn,.sidebar-tools-grid .auth-status{grid-column:1 / -1} }
+    .utility-actions { display:none; }
+    @media (max-width:430px) { .stage{min-height:660px}.jar-zone{min-height:490px}.jar-wrap{height:410px;min-height:390px}.jar{inset:70px 22px 18px}.secondary-actions{gap:6px}.shake-button{min-height:58px}.winner-card{padding:16px}.chat-widget{height:calc(100vh - 110px)} }
+  </style>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">AH</div>
+      <div>
+        <h1>Arisan Hedonnn <small style="font-size:.34em;vertical-align:top">V4</small></h1>
+        <p class="subtitle">Panggung kocokan yang lebih lega, sesi lebih rapi.</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="session-pill"><span class="status-dot"></span><span id="sessionStatus">Sesi baru aktif</span></div>
+    </div>
+  </header>
+
+  <main class="layout-v4" id="mainLayout">
+    <aside class="panel workspace-sidebar" id="workspaceSidebar">
+      <div class="sidebar-tools">
+        <div class="sidebar-tools-head"><strong>Menu utama</strong><button class="btn sidebar-toggle" id="sidebarToggleBtn" type="button" aria-expanded="true" aria-label="Sembunyikan sidebar" title="Sembunyikan sidebar">‹</button></div>
+        <nav class="sidebar-tools-grid" aria-label="Menu utama aplikasi">
+          <button class="btn btn-primary" id="drawBtn" type="button"><span>Kocok Toples</span></button>
+          <button class="btn" id="participantsMenuBtn" type="button"><span>Peserta · <span id="participantCount">0 nama</span></span></button>
+          <button class="btn" id="sessionsMenuBtn" type="button"><span>Sesi</span></button>
+          <button class="btn record-mode" id="recordModeBtn" type="button" aria-pressed="false"><span>Rekam: Mati</span></button>
+          <button class="btn record-folder" id="recordFolderBtn" type="button"><span>Pilih folder</span></button>
+          <button class="btn btn-primary" id="musicMenuBtn" type="button"><span>Musik</span></button>
+          <button class="btn auth-status" id="authStatusBtn" type="button"><span>Mode lokal</span></button>
+          <button class="btn btn-danger" id="logoutAccountBtn" type="button"><span>Keluar akun</span></button>
+          <button class="btn" id="saveHistoryBtn" type="button"><span>Simpan Riwayat</span></button>
+        </nav>
+      </div>
+      <div class="side-menu" role="tablist" aria-label="Data sesi aktif">
+        <button class="side-tab active" id="historyTab" type="button" role="tab" aria-selected="true">Riwayat</button>
+        <button class="side-tab" id="activityTab" type="button" role="tab" aria-selected="false">Log sesi</button>
+      </div>
+      <section class="side-panel active" id="historyPanel" role="tabpanel">
+        <div class="panel-header"><div><h2>Riwayat pemenang</h2><p class="subtitle">Khusus sesi aktif</p></div><span class="tiny-label" id="historyCount">0 hasil</span></div>
+        <div class="history-list" id="historyList"></div>
+      </section>
+      <section class="side-panel" id="activityPanel" role="tabpanel">
+        <div class="panel-header"><div><h2>Log aktivitas</h2><p class="subtitle">Semua perubahan sesi</p></div><span class="tiny-label" id="activityCount">0 log</span></div>
+        <div class="activity-list" id="activityLog"></div>
+      </section>
+    </aside>
+
+    <section class="panel stage">
+      <div class="stage-top">
+        <div class="stat-grid">
+          <div class="stat"><span class="tiny-label">Total</span><div class="stat-value" id="totalStat">0</div></div>
+          <div class="stat"><span class="tiny-label">Tersisa</span><div class="stat-value" id="leftStat">0</div></div>
+          <div class="stat"><span class="tiny-label">Sudah keluar</span><div class="stat-value" id="drawnStat">0</div></div>
+        </div>
+      </div>
+
+      <div class="jar-zone" aria-label="Animasi toples arisan">
+        <div class="jar-wrap" id="jarWrap">
+          <div class="jar-lid"></div>
+          <div class="jar-mouth"></div>
+          <div class="jar" id="jar"></div>
+        </div>
+        <div class="surprise-panel" id="surprisePanel">
+          <div class="countdown-number" id="countdownNumber">3</div>
+          <div class="surprise-text" id="surpriseText">Surprise! Siapa yang bakal keluar?</div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <div class="utility-actions" aria-hidden="true">
+    <button id="saveSessionBtn" type="button" tabindex="-1">Simpan sesi aktif</button>
+    <button id="loadSessionBtn" type="button" tabindex="-1">Daftar sesi</button>
+    <button id="resetSessionBtn" type="button" tabindex="-1">Buat sesi baru</button>
+  </div>
+
+  <div class="recording-badge" id="recordingBadge" role="status" aria-live="polite">
+    <span class="recording-dot"></span>
+    <span class="recording-copy" id="recordingStatus">Merekam kocokan ke MP4</span>
+    <button class="btn" id="stopRecordingBtn" type="button">Stop</button>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer" id="participantsDrawer" aria-label="Pengaturan peserta">
+    <div class="drawer-head"><div><h2>Peserta & anggota</h2><p class="subtitle">Atur seluruh isi toples dari sini.</p></div><button class="btn" data-close-drawer type="button">Tutup</button></div>
+    <div class="field"><label for="singleName">Tambah satu anggota</label><input id="singleName" type="text" placeholder="Contoh: Rani" autocomplete="off"></div>
+    <div class="btn-row"><button class="btn btn-primary" id="addNameBtn" type="button">Tambah anggota</button><button class="btn" id="sampleBtn" type="button">Contoh data</button></div>
+    <div class="field" style="margin-top:18px"><label for="bulkNames">Masukkan banyak anggota</label><textarea id="bulkNames" placeholder="Satu nama per baris"></textarea></div>
+    <div class="btn-row"><button class="btn" id="bulkBtn" type="button">Masukkan daftar</button><button class="btn btn-danger" id="clearBtn" type="button">Bersihkan</button></div>
+    <div class="field" style="margin-top:20px"><span class="tiny-label">Mode kocok</span><div class="mode-switch" role="group"><button type="button" id="randomMode" class="active">Random</button><button type="button" id="orderedMode">Berurutan</button></div></div>
+    <div class="participant-list" id="participantList" aria-live="polite"></div>
+  </aside>
+
+  <aside class="drawer right" id="sessionsDrawer" aria-label="Daftar sesi">
+    <div class="drawer-head"><div><h2>Sesi arisan</h2><p class="subtitle">Setiap sesi disimpan terpisah.</p></div><button class="btn" data-close-drawer type="button">Tutup</button></div>
+    <button class="btn btn-primary" id="createSessionFromDrawer" type="button">+ Buat sesi baru</button>
+    <div class="session-list" id="sessionList"></div>
+  </aside>
+
+  <div class="music-popover" id="musicPopover">
+    <div class="drawer-head"><div><h2 style="margin:0">Musik</h2><p class="subtitle">Kontrol playlist dari kanan atas.</p></div><button class="btn" id="closeMusicBtn" type="button">Tutup</button></div>
+    <div class="local-player"><label class="tiny-label" for="audioFile">Playlist musik lokal</label><input id="audioFile" type="file" accept="audio/*" multiple><div class="player-actions"><button class="btn" id="audioPrevBtn" type="button">Previous</button><button class="btn btn-primary" id="audioPlayPauseBtn" type="button">Play</button><button class="btn" id="audioStopBtn" type="button">Stop</button><button class="btn" id="audioNextBtn" type="button">Next</button><label class="player-chip"><input id="audioLoop" type="checkbox"> Loop</label><div class="player-volume"><label class="tiny-label" for="audioVolume">Volume</label><input id="audioVolume" type="range" min="0" max="1" step="0.05" value="0.75"></div></div><span class="file-name" id="audioFileName">Belum ada playlist musik dipilih.</span><div class="track-list" id="trackList"></div><audio id="localAudio"></audio></div>
+    <span class="sound-note" id="soundNote">Pilih beberapa file musik dari perangkat.</span>
+  </div>
+
+  <section class="chat-widget" id="chatWidget" aria-label="Chat AI">
+    <div class="panel-header"><div class="guide-face"><div class="avatar">AI</div><div><h2>Pemandu AI</h2><p class="subtitle">Aktif dan merekam chat sesi ini.</p></div></div><button class="btn" id="closeChatBtn" type="button">—</button></div>
+    <div class="chat-log" id="chatLog" aria-live="polite"></div>
+    <div class="quick-questions"><button type="button" data-question="Siapa yang sudah keluar?">Sudah keluar?</button><button type="button" data-question="Berapa nama yang tersisa?">Tersisa?</button><button type="button" data-question="Jelaskan aturan arisan ini">Aturan</button></div>
+    <form class="chat-form" id="chatForm"><input id="chatInput" type="text" placeholder="Tanya pemandu..." autocomplete="off"><button class="btn btn-primary" type="submit">Kirim</button></form>
+  </section>
+  <button class="chat-fab" id="chatFab" type="button">AI<span class="chat-unread" id="chatUnread">0</span></button>
+
+  <div class="modal" id="createSessionModal"><form class="modal-card" id="createSessionForm"><h2>Buat sesi baru</h2><p class="subtitle">Sesi lama tetap aman dan tidak akan tertimpa.</p><div class="field" style="margin-top:18px"><label for="newSessionName">Nama sesi</label><input id="newSessionName" type="text" placeholder="Contoh: Arisan Juli 2026" autocomplete="off" maxlength="80" required></div><div class="btn-row"><button class="btn btn-primary" id="confirmCreateSession" type="submit">Buat & mulai</button><button class="btn" id="cancelCreateSession" type="button">Batal</button></div></form></div>
+  <div class="modal" id="loginModal"><form class="modal-card" id="loginForm"><h2>Masuk sebagai admin</h2><p class="subtitle">Penonton tetap bisa melihat kocokan. Login diperlukan untuk mengubah peserta, sesi, atau memulai kocokan.</p><div class="field" style="margin-top:18px"><label for="adminPassword">Password admin</label><input id="adminPassword" type="password" autocomplete="current-password" maxlength="200"></div><div class="btn-row"><button class="btn btn-primary" id="loginSubmitBtn" type="submit">Masuk aman</button><button class="btn" id="cancelLoginBtn" type="button">Batal</button></div><p class="login-feedback" id="loginFeedback" role="alert"></p></form></div>
+
+  <div class="confetti-layer" id="confettiLayer"></div>
+  <div class="winner-card" id="winnerCard">
+    <span class="winner-label" id="winnerLabel">Nama yang keluar</span>
+    <strong class="winner-name" id="winnerName">-</strong>
+    <span id="winnerSub">Siap lanjut kocokan berikutnya.</span>
+    <div class="winner-actions">
+      <button class="btn btn-primary" id="continueBtn" type="button">Lanjut Kocok</button>
+      <button class="btn btn-danger" id="undoBtn" type="button">Undo hasil</button>
+      <button class="btn" id="closeWinnerBtn" type="button">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const sessionStorageKey = "arisan-hedonnn-v4-sessions";
+      const activeSessionKey = "arisan-hedonnn-v4-active-session";
+      const sampleNames = ["Rani", "Dimas", "Ayu", "Fajar", "Nadia", "Bima", "Sari", "Reza"];
+      const openingChat = {
+        from: "ai",
+        text: "Halo, gue siap jadi pemandu. Masukkan nama peserta, pilih mode kocok, lalu tekan Kocok Toples."
+      };
+      const state = loadState();
+      let isDrawing = false;
+      let audioContext = null;
+      let shakeTimer = null;
+      let drawSequenceTimers = [];
+      let playlistUrls = [];
+      let playlistFiles = [];
+      let currentTrackIndex = -1;
+      let localAudioLoaded = false;
+      const liveMode = location.protocol === "http:" || location.protocol === "https:";
+      const cloudEventId = new URLSearchParams(location.search).get("event") || "";
+      let liveReady = !liveMode;
+      let applyingRemote = false;
+      let syncTimer = null;
+      let liveDrawId = null;
+      let liveRevealTimer = null;
+      let seenWinnerId = null;
+      let serverHasSavedSession = false;
+      let lastSyncOk = true;
+      let pendingLocalSync = false;
+      let activeSessionId = safeStorageGet(activeSessionKey) || "";
+      let activeSessionName = "Sesi belum diberi nama";
+      let chatUnreadCount = 0;
+      let authRequired = liveMode;
+      let authenticated = !liveMode;
+      let csrfToken = "";
+      let lastRemoteStateSignature = "";
+      let lastJarSignature = "";
+      let recordingMode = false;
+      let recordingPreparing = false;
+      let screenRecorder = null;
+      let screenStream = null;
+      let recordingChunks = [];
+      let recordingDirectory = null;
+      let recordingStopTimer = null;
+      let recordingFileName = "";
+      let sidebarCollapsed = false;
+
+      const els = {};
+      [
+        "singleName", "addNameBtn", "sampleBtn", "bulkNames", "bulkBtn", "clearBtn",
+        "randomMode", "orderedMode", "participantList", "participantCount",
+        "totalStat", "leftStat", "drawnStat", "jarWrap", "jar",
+        "winnerCard", "winnerLabel", "winnerName", "winnerSub", "continueBtn", "closeWinnerBtn", "confettiLayer", "surprisePanel", "countdownNumber", "surpriseText", "drawBtn", "undoBtn",
+        "saveHistoryBtn", "saveSessionBtn", "loadSessionBtn", "resetSessionBtn", "chatLog", "chatForm", "chatInput", "historyList",
+        "audioFile", "localAudio", "audioPrevBtn", "audioPlayPauseBtn", "audioStopBtn", "audioNextBtn", "audioLoop", "audioVolume", "audioFileName", "trackList",
+        "historyCount", "sessionStatus", "soundNote", "participantsMenuBtn", "sessionsMenuBtn", "musicMenuBtn", "musicPopover", "closeMusicBtn",
+        "drawerBackdrop", "participantsDrawer", "sessionsDrawer", "sessionList", "createSessionFromDrawer", "chatWidget", "chatFab", "chatUnread", "closeChatBtn",
+        "createSessionModal", "createSessionForm", "newSessionName", "confirmCreateSession", "cancelCreateSession",
+        "historyTab", "activityTab", "historyPanel", "activityPanel", "activityLog", "activityCount",
+        "authStatusBtn", "loginModal", "loginForm", "adminPassword", "loginSubmitBtn", "cancelLoginBtn", "loginFeedback",
+        "recordModeBtn", "recordFolderBtn", "recordingBadge", "recordingStatus", "stopRecordingBtn", "logoutAccountBtn",
+        "mainLayout", "workspaceSidebar", "sidebarToggleBtn"
+      ].forEach(id => els[id] = document.getElementById(id));
+
+      function setSidebarCollapsed(collapsed) {
+        sidebarCollapsed = Boolean(collapsed);
+        els.mainLayout.classList.toggle("sidebar-collapsed", sidebarCollapsed);
+        els.sidebarToggleBtn.textContent = sidebarCollapsed ? "›" : "‹";
+        els.sidebarToggleBtn.setAttribute("aria-expanded", String(!sidebarCollapsed));
+        const label = sidebarCollapsed ? "Tampilkan sidebar" : "Sembunyikan sidebar";
+        els.sidebarToggleBtn.setAttribute("aria-label", label);
+        els.sidebarToggleBtn.title = label;
+      }
+
+      function loadState() {
+        return freshState();
+      }
+
+      function freshState() {
+        return {
+          participants: [],
+          drawn: [],
+          mode: "random",
+          chat: [{ ...openingChat }],
+          activityLog: []
+        };
+      }
+
+      function saveState() {
+        autoSaveActiveSession();
+        if (liveMode && liveReady && !applyingRemote && canEditLive()) queuePublishState();
+      }
+
+      function serializeState() {
+        return {
+          participants: state.participants,
+          drawn: state.drawn,
+          mode: state.mode,
+          chat: state.chat,
+          activityLog: state.activityLog
+        };
+      }
+
+      async function requestLive(path, options = {}) {
+        const method = String(options.method || "GET").toUpperCase();
+        const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+        if (cloudEventId) headers["X-Arisan-Event"] = cloudEventId;
+        if (method !== "GET" && csrfToken && path !== "/api/auth/login") headers["X-CSRF-Token"] = csrfToken;
+        const response = await fetch(path, {
+          cache: "no-store",
+          credentials: "same-origin",
+          ...options,
+          headers
+        });
+        const payload = await response.json().catch(() => ({ ok:false, error:"Respons server tidak valid." }));
+        if (!response.ok) {
+          if (response.status === 401) {
+            authenticated = false;
+            csrfToken = "";
+            renderAuthStatus();
+          }
+          const error = new Error(payload.error || `Live server error ${response.status}`);
+          error.status = response.status;
+          throw error;
+        }
+        return payload;
+      }
+
+      function renderAuthStatus() {
+        const canEdit = !authRequired || authenticated;
+        els.authStatusBtn.classList.toggle("locked", !canEdit);
+        els.authStatusBtn.textContent = authRequired
+          ? (authenticated ? "Dashboard" : "Masuk akun")
+          : "Mode lokal";
+        els.logoutAccountBtn.hidden = !authenticated;
+        els.participantsMenuBtn.disabled = !canEdit;
+        els.sessionsMenuBtn.disabled = !canEdit;
+      }
+
+      function openLoginModal() {
+        if (!authRequired || authenticated) return;
+        const next = `${location.pathname}${location.search}`;
+        location.href = `/login?next=${encodeURIComponent(next)}`;
+      }
+
+      async function checkAuth() {
+        if (!liveMode) return;
+        try {
+          const auth = await requestLive("/api/auth/status");
+          authRequired = Boolean(auth.required);
+          authenticated = Boolean(auth.authenticated);
+          csrfToken = String(auth.csrfToken || "");
+        } catch (error) {
+          authRequired = true;
+          authenticated = false;
+          csrfToken = "";
+        }
+        renderAuthStatus();
+      }
+
+      async function loginAdmin(event) {
+        event.preventDefault();
+        const password = els.adminPassword.value;
+        if (!password) return;
+        els.loginSubmitBtn.disabled = true;
+        els.loginFeedback.textContent = "Memeriksa password...";
+        try {
+          const auth = await requestLive("/api/auth/login", { method:"POST", body:JSON.stringify({ password }) });
+          authRequired = Boolean(auth.required);
+          authenticated = Boolean(auth.authenticated);
+          csrfToken = String(auth.csrfToken || "");
+          els.loginModal.classList.remove("show");
+          renderAuthStatus();
+          addAiMessage("Mode admin aktif. Perubahan sesi sekarang dilindungi.");
+          saveState();
+          render();
+        } catch (error) {
+          els.loginFeedback.textContent = error.message || "Login gagal.";
+        } finally {
+          els.loginSubmitBtn.disabled = false;
+        }
+      }
+
+      async function logoutAdmin() {
+        if (!authRequired || !authenticated) { openLoginModal(); return; }
+        try { await requestLive("/api/auth/logout", { method:"POST", body:"{}" }); } catch (error) { /* session tetap dibersihkan di UI */ }
+        authenticated = false;
+        csrfToken = "";
+        location.href = "/login";
+      }
+
+      function canEditLive() {
+        return !liveMode || !authRequired || authenticated;
+      }
+
+      function queuePublishState() {
+        if (!liveMode) return;
+        pendingLocalSync = true;
+        window.clearTimeout(syncTimer);
+        syncTimer = window.setTimeout(publishState, 140);
+      }
+
+      async function publishState() {
+        if (!liveMode || !liveReady || applyingRemote || !canEditLive()) return;
+        try {
+          const snapshot = await requestLive("/api/state", {
+            method: "POST",
+            body: JSON.stringify({ state: serializeState() })
+          });
+          liveReady = true;
+          lastSyncOk = true;
+          pendingLocalSync = false;
+          applyRemoteSnapshot(snapshot);
+        } catch (error) {
+          lastSyncOk = false;
+          pendingLocalSync = false;
+          console.warn("Live sync gagal", error);
+          renderStats();
+        }
+      }
+
+      async function pullLiveState() {
+        if (!liveMode) return;
+        if (pendingLocalSync) return;
+        try {
+          const snapshot = await requestLive("/api/state");
+          liveReady = true;
+          lastSyncOk = true;
+          applyRemoteSnapshot(snapshot);
+        } catch (error) {
+          lastSyncOk = false;
+          console.warn("Live state gagal dibaca", error);
+          renderStats();
+        }
+      }
+
+      function applyRemoteSnapshot(snapshot) {
+        if (!snapshot || !snapshot.state) return;
+        const stateSignature = JSON.stringify(snapshot.state);
+        const stateChanged = stateSignature !== lastRemoteStateSignature;
+        const previousDrawn = new Set(state.drawn.map(item => item.name));
+        applyingRemote = true;
+        serverHasSavedSession = Boolean(snapshot.hasSavedSession);
+        if (stateChanged) {
+          state.participants = Array.isArray(snapshot.state.participants) ? snapshot.state.participants : [];
+          state.drawn = Array.isArray(snapshot.state.drawn) ? snapshot.state.drawn : [];
+          state.mode = snapshot.state.mode === "ordered" ? "ordered" : "random";
+          state.chat = Array.isArray(snapshot.state.chat) && snapshot.state.chat.length
+            ? snapshot.state.chat
+            : [{ ...openingChat }];
+          if (Array.isArray(snapshot.state.activityLog)) state.activityLog = snapshot.state.activityLog;
+          const newWinner = state.drawn.find(item => !previousDrawn.has(item.name));
+          if (newWinner && !state.activityLog.some(item => item.text === `${newWinner.name} keluar sebagai pemenang`)) {
+            state.activityLog.push({ key:`winner-${newWinner.name}-${newWinner.time}`, text:`${newWinner.name} keluar sebagai pemenang`, time:new Date().toLocaleString("id-ID") });
+          }
+          lastRemoteStateSignature = stateSignature;
+        }
+        handleLiveSignals(snapshot);
+        if (stateChanged) render();
+        applyingRemote = false;
+        if (stateChanged) autoSaveActiveSession();
+      }
+
+      function handleLiveSignals(snapshot) {
+        const active = snapshot.liveDraw;
+        if (active && active.id !== liveDrawId) {
+          liveDrawId = active.id;
+          isDrawing = true;
+          setSidebarCollapsed(true);
+          seenWinnerId = seenWinnerId === active.id ? null : seenWinnerId;
+          window.clearTimeout(liveRevealTimer);
+          els.winnerCard.classList.remove("show");
+          els.jarWrap.classList.add("shaking");
+          startShakeSound();
+          startSurpriseSequence(Math.max(0, snapshot.serverNow - active.startedAt));
+          liveRevealTimer = window.setTimeout(() => revealLiveWinner(active), Math.max(0, active.revealAt - snapshot.serverNow));
+        }
+
+        if (!active && snapshot.lastWinner && snapshot.lastWinner.id !== seenWinnerId) {
+          revealLiveWinner(snapshot.lastWinner);
+        }
+
+        if (!active && liveDrawId && !snapshot.lastWinner) {
+          liveDrawId = null;
+          isDrawing = false;
+          window.clearTimeout(liveRevealTimer);
+          clearSurpriseSequence();
+          stopShakeSound();
+          els.jarWrap.classList.remove("shaking");
+          setSidebarCollapsed(false);
+        }
+      }
+
+      function revealLiveWinner(data) {
+        if (!data || data.id === seenWinnerId) return;
+        seenWinnerId = data.id;
+        liveDrawId = null;
+        isDrawing = false;
+        window.clearTimeout(liveRevealTimer);
+        els.winnerLabel.textContent = data.label;
+        els.winnerName.textContent = data.winner;
+        els.winnerSub.textContent = data.sub;
+        fitWinnerName();
+        els.jarWrap.classList.remove("shaking");
+        clearSurpriseSequence();
+        stopShakeSound();
+        playWinnerSound();
+        els.winnerCard.classList.add("show");
+        launchConfetti();
+        scheduleRecordingStop();
+        if (liveMode) window.setTimeout(pullLiveState, 350);
+      }
+
+      function normalizeName(name) {
+        return String(name || "").trim().replace(/\s+/g, " ").slice(0, 80);
+      }
+
+      function addActivity(text) {
+        state.activityLog.push({ key:`log-${Date.now()}-${Math.random().toString(36).slice(2,6)}`, text, time:new Date().toLocaleString("id-ID") });
+        if (state.activityLog.length > 200) state.activityLog = state.activityLog.slice(-200);
+      }
+
+      function availableNames() {
+        const used = new Set(state.drawn.map(item => item.name));
+        return state.participants.filter(name => !used.has(name));
+      }
+
+      function addNames(names) {
+        const availableSlots = Math.max(0, 500 - state.participants.length);
+        const existing = new Set(state.participants.map(name => name.toLowerCase()));
+        const cleaned = names.map(normalizeName).filter(Boolean).filter(name => {
+          const key = name.toLowerCase();
+          if (existing.has(key)) return false;
+          existing.add(key);
+          return true;
+        }).slice(0, availableSlots);
+
+        state.participants.push(...cleaned);
+        if (cleaned.length) {
+          addActivity(`${cleaned.length} anggota ditambahkan: ${cleaned.join(", ")}`);
+          addAiMessage(`${cleaned.length} nama sudah masuk ke toples. Total peserta sekarang ${state.participants.length}.`);
+        }
+        if (!availableSlots) addAiMessage("Batas maksimal 500 anggota per sesi sudah tercapai.");
+        saveState();
+        render();
+      }
+
+      function removeName(name) {
+        state.participants = state.participants.filter(item => item !== name);
+        state.drawn = state.drawn.filter(item => item.name !== name);
+        addActivity(`${name} dihapus dari daftar anggota`);
+        saveState();
+        render();
+      }
+
+      function setMode(mode) {
+        state.mode = mode;
+        addActivity(`Mode kocok diubah ke ${mode === "random" ? "random" : "berurutan"}`);
+        addAiMessage(mode === "random"
+          ? "Mode random aktif. Nama akan dipilih acak dari peserta yang belum keluar."
+          : "Mode berurutan aktif. Nama akan keluar mengikuti urutan daftar peserta.");
+        saveState();
+        render();
+      }
+
+      function getAudioContext() {
+        if (!audioContext) {
+          const AudioCtor = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtor) return null;
+          audioContext = new AudioCtor();
+        }
+        if (audioContext.state === "suspended") audioContext.resume();
+        return audioContext;
+      }
+
+      function playTone(frequency, start, duration, volume, type = "sine") {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + 0.04);
+      }
+
+      function playNoise(start, duration, volume) {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * duration));
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i += 1) {
+          data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+        }
+        const source = ctx.createBufferSource();
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(900 + Math.random() * 800, start);
+        filter.Q.setValueAtTime(1.8, start);
+        gain.gain.setValueAtTime(volume, start);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        source.buffer = buffer;
+        source.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        source.start(start);
+      }
+
+      function setLocalAudioFiles(event) {
+        const files = Array.from(event.target.files || []).filter(file => file.type.startsWith("audio/"));
+        if (!files.length) return;
+        playlistUrls.forEach(url => URL.revokeObjectURL(url));
+        playlistFiles = files;
+        playlistUrls = files.map(file => URL.createObjectURL(file));
+        currentTrackIndex = 0;
+        localAudioLoaded = true;
+        loadTrack(0, false);
+        addAiMessage(`${files.length} lagu sudah masuk playlist lokal. Previous, Play/Pause, Stop, dan Next siap dipakai.`);
+        render();
+      }
+
+      function loadTrack(index, shouldPlay) {
+        if (!playlistFiles.length) return;
+        currentTrackIndex = (index + playlistFiles.length) % playlistFiles.length;
+        els.localAudio.src = playlistUrls[currentTrackIndex];
+        els.localAudio.volume = Number(els.audioVolume.value);
+        els.audioFileName.textContent = `Now playing: ${playlistFiles[currentTrackIndex].name}`;
+        if (shouldPlay) playLocalAudio();
+      }
+
+      function toggleLocalAudio() {
+        if (!playlistFiles.length) {
+          addAiMessage("Pilih beberapa file musik dulu, baru tekan Play.");
+          render();
+          return;
+        }
+        if (els.localAudio.paused) {
+          playLocalAudio();
+        } else {
+          els.localAudio.pause();
+          addAiMessage("Musik playlist dipause. Tekan Play untuk lanjut.");
+          render();
+        }
+      }
+
+      function playLocalAudio() {
+        if (!playlistFiles.length) return;
+        els.localAudio.volume = Number(els.audioVolume.value);
+        els.localAudio.play()
+          .then(() => {
+            localAudioLoaded = true;
+            addAiMessage(`Playlist diputar: ${playlistFiles[currentTrackIndex].name}`);
+            render();
+          })
+          .catch(() => {
+            addAiMessage("Musik belum bisa diputar. Coba klik Play lagi atau pilih file audio lain.");
+            render();
+          });
+      }
+
+      function stopLocalAudio() {
+        if (!playlistFiles.length) {
+          addAiMessage("Belum ada playlist musik yang bisa distop.");
+          render();
+          return;
+        }
+        els.localAudio.pause();
+        els.localAudio.currentTime = 0;
+        addAiMessage("Musik distop dan lagu aktif balik ke awal.");
+        render();
+      }
+
+      function previousTrack() {
+        if (!playlistFiles.length) return;
+        const shouldPlay = !els.localAudio.paused;
+        loadTrack(currentTrackIndex - 1, shouldPlay);
+        addAiMessage(`Previous: ${playlistFiles[currentTrackIndex].name}`);
+        render();
+      }
+
+      function nextTrack(manual = true) {
+        if (!playlistFiles.length) return;
+        const shouldPlay = manual ? !els.localAudio.paused : true;
+        const isLast = currentTrackIndex === playlistFiles.length - 1;
+        if (!manual && isLast && !els.audioLoop.checked) {
+          stopLocalAudio();
+          return;
+        }
+        loadTrack(currentTrackIndex + 1, shouldPlay);
+        if (manual) addAiMessage(`Next: ${playlistFiles[currentTrackIndex].name}`);
+        render();
+      }
+
+      function updateAudioVolume() {
+        els.localAudio.volume = Number(els.audioVolume.value);
+      }
+
+      function startShakeSound() {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        stopShakeSound();
+        playNoise(ctx.currentTime, 0.12, 0.09);
+        shakeTimer = window.setInterval(() => {
+          const now = ctx.currentTime;
+          playNoise(now, 0.08 + Math.random() * 0.07, 0.055 + Math.random() * 0.045);
+          if (Math.random() > 0.45) playTone(150 + Math.random() * 80, now, 0.08, 0.018, "triangle");
+        }, 115);
+      }
+
+      function stopShakeSound() {
+        if (shakeTimer) {
+          window.clearInterval(shakeTimer);
+          shakeTimer = null;
+        }
+      }
+
+      function playWinnerSound() {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        playTone(523.25, now, 0.16, 0.06, "sine");
+        playTone(659.25, now + 0.16, 0.16, 0.06, "sine");
+        playTone(783.99, now + 0.32, 0.34, 0.07, "triangle");
+      }
+
+      function fitWinnerName() {
+        const nameEl = els.winnerName;
+        const cardEl = els.winnerCard;
+        if (!nameEl || !cardEl) return;
+        const available = Math.max(120, cardEl.clientWidth - 48);
+        const viewportMax = Math.min(74, Math.max(38, window.innerWidth * 0.085));
+        const minSize = 18;
+        nameEl.style.setProperty("--winner-scale", "1");
+        nameEl.style.fontSize = `${viewportMax}px`;
+
+        let size = viewportMax;
+        while (size > minSize && nameEl.scrollWidth > available) {
+          size -= 2;
+          nameEl.style.fontSize = `${size}px`;
+        }
+
+        if (nameEl.scrollWidth > available) {
+          const scale = Math.max(0.42, available / nameEl.scrollWidth);
+          nameEl.style.setProperty("--winner-scale", String(scale));
+        }
+      }
+
+      function launchConfetti() {
+        const colors = ["#c9872f", "#9e3f4d", "#315c49", "#2f587d", "#f5c542", "#ffffff"];
+        els.confettiLayer.innerHTML = "";
+        for (let i = 0; i < 64; i += 1) {
+          const piece = document.createElement("span");
+          piece.className = "confetti-piece";
+          const angle = (-150 + Math.random() * 300) * Math.PI / 180;
+          const distance = 120 + Math.random() * 260;
+          const dx = Math.cos(angle) * distance;
+          const dy = Math.sin(angle) * distance + 130 + Math.random() * 90;
+          piece.style.setProperty("--dx", `${dx}px`);
+          piece.style.setProperty("--dy", `${dy}px`);
+          piece.style.setProperty("--spin", `${(Math.random() > 0.5 ? 1 : -1) * (240 + Math.random() * 520)}deg`);
+          piece.style.setProperty("--delay", `${Math.random() * 130}ms`);
+          piece.style.setProperty("--confetti-color", colors[i % colors.length]);
+          piece.style.width = `${7 + Math.random() * 8}px`;
+          piece.style.height = `${9 + Math.random() * 12}px`;
+          els.confettiLayer.appendChild(piece);
+        }
+        window.setTimeout(() => {
+          els.confettiLayer.innerHTML = "";
+        }, 1500);
+      }
+
+      function closeWinnerCard(restoreSidebar = true) {
+        els.winnerCard.classList.remove("show");
+        if (restoreSidebar) setSidebarCollapsed(false);
+      }
+
+      function continueDraw() {
+        closeWinnerCard(false);
+        window.setTimeout(requestDraw, 120);
+      }
+
+      function saveHistoryFile() {
+        if (!state.drawn.length) {
+          addAiMessage("Riwayat masih kosong, belum ada pemenang yang bisa disimpan.");
+          render();
+          return;
+        }
+        const rows = [
+          ["No", "Nama", "Mode", "Jam"],
+          ...state.drawn.map((item, index) => [
+            index + 1,
+            item.name,
+            item.mode === "random" ? "Random" : "Berurutan",
+            item.time
+          ])
+        ];
+        const csv = rows.map(row => row.map(csvCell).join(",")).join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const date = new Date().toISOString().slice(0, 10);
+        link.href = url;
+        link.download = `riwayat-arisan-hedonnn-${date}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        addAiMessage("Riwayat pemenang sudah disimpan sebagai file CSV.");
+        render();
+      }
+
+      function csvCell(value) {
+        let safe = String(value);
+        if (/^[=+\-@]/.test(safe)) safe = `'${safe}`;
+        return `"${safe.replace(/"/g, '""')}"`;
+      }
+
+      function hasSavedSession() {
+        try {
+          return Object.keys(readSessions()).length > 0;
+        } catch (error) {
+          console.warn("Sesi tersimpan tidak bisa dicek", error);
+          return false;
+        }
+      }
+
+      function safeStorageGet(key) {
+        try { return localStorage.getItem(key); }
+        catch (error) { console.warn("Storage browser tidak tersedia", error); return null; }
+      }
+
+      function safeStorageSet(key, value) {
+        try { localStorage.setItem(key, value); return true; }
+        catch (error) { console.warn("Storage browser tidak bisa ditulis", error); return false; }
+      }
+
+      function readSessions() {
+        try { return JSON.parse(safeStorageGet(sessionStorageKey) || "{}") || {}; }
+        catch (error) { return {}; }
+      }
+
+      function sessionSnapshot() {
+        return { id: activeSessionId, name: activeSessionName, participants: [...state.participants], drawn: [...state.drawn], mode: state.mode, chat: [...state.chat], activityLog: [...state.activityLog], savedAt: new Date().toISOString() };
+      }
+
+      function autoSaveActiveSession() {
+        if (!activeSessionId || applyingRemote) return;
+        const sessions = readSessions();
+        sessions[activeSessionId] = sessionSnapshot();
+        safeStorageSet(sessionStorageKey, JSON.stringify(sessions));
+        safeStorageSet(activeSessionKey, activeSessionId);
+      }
+
+      function saveSession() {
+        if (!activeSessionId) { openCreateSessionModal(); return; }
+        autoSaveActiveSession();
+        addAiMessage(`Sesi “${activeSessionName}” sudah disimpan tanpa mengubah sesi lain.`);
+        render();
+      }
+
+      function loadSession() {
+        openDrawer(els.sessionsDrawer);
+      }
+
+      function applySession(saved) {
+        if (!saved || !Array.isArray(saved.participants)) return;
+        const next = {
+          participants: saved.participants.map(name => normalizeName(String(name))).filter(Boolean),
+          drawn: Array.isArray(saved.drawn)
+            ? saved.drawn
+              .filter(item => item && item.name)
+              .map(item => ({
+                name: normalizeName(String(item.name)),
+                mode: item.mode === "ordered" ? "ordered" : "random",
+                time: String(item.time || "-")
+              }))
+              .filter(item => item.name)
+            : [],
+          mode: saved.mode === "ordered" ? "ordered" : "random",
+          chat: Array.isArray(saved.chat) && saved.chat.length
+            ? saved.chat
+              .filter(message => message && message.text)
+              .map(message => ({
+                from: message.from === "user" ? "user" : "ai",
+                text: String(message.text)
+              }))
+            : [{ ...openingChat }],
+          activityLog: Array.isArray(saved.activityLog) ? saved.activityLog : []
+        };
+
+        state.participants = next.participants;
+        state.drawn = next.drawn;
+        state.mode = next.mode;
+        state.chat = next.chat;
+        state.activityLog = next.activityLog;
+        activeSessionId = saved.id;
+        activeSessionName = saved.name || "Sesi tanpa nama";
+        safeStorageSet(activeSessionKey, activeSessionId);
+        trimChat();
+        isDrawing = false;
+        clearSurpriseSequence();
+        stopShakeSound();
+        els.jarWrap.classList.remove("shaking");
+        els.winnerCard.classList.remove("show");
+        addAiMessage(`Sesi “${activeSessionName}” berhasil dimuat. Kita lanjut dari titik terakhir.`);
+        saveState();
+        closeDrawers();
+        render();
+      }
+
+      function openCreateSessionModal() {
+        els.newSessionName.value = `Arisan ${new Date().toLocaleDateString("id-ID", { day:"numeric", month:"long", year:"numeric" })}`;
+        els.createSessionModal.classList.add("show");
+        window.setTimeout(() => { els.newSessionName.focus(); els.newSessionName.select(); }, 50);
+      }
+
+      function createNewSession(event) {
+        if (event) event.preventDefault();
+        if (!els.createSessionModal.classList.contains("show")) return;
+        const name = normalizeName(els.newSessionName.value);
+        if (!name) { els.newSessionName.focus(); return; }
+        autoSaveActiveSession();
+        activeSessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
+        activeSessionName = name;
+        const next = freshState();
+        state.participants = next.participants; state.drawn = next.drawn; state.mode = next.mode; state.chat = next.chat; state.activityLog = next.activityLog;
+        addActivity(`Sesi “${name}” dibuat`);
+        addAiMessage(`Sesi “${name}” dibuat. Sesi sebelumnya tetap tersimpan. Sekarang masukkan anggota lewat menu Peserta.`);
+        els.createSessionModal.classList.remove("show");
+        saveState();
+        render();
+        openDrawer(els.participantsDrawer);
+      }
+
+      function renderSessionList() {
+        const sessions = Object.values(readSessions()).sort((a,b) => String(b.savedAt).localeCompare(String(a.savedAt)));
+        els.sessionList.innerHTML = "";
+        if (!sessions.length) { els.sessionList.innerHTML = `<div class="empty-note">Belum ada sesi. Buat sesi pertama untuk mulai.</div>`; return; }
+        sessions.forEach(saved => {
+          const card = document.createElement("div");
+          card.className = `session-card ${saved.id === activeSessionId ? "active" : ""}`;
+          const date = saved.savedAt ? new Date(saved.savedAt).toLocaleString("id-ID") : "-";
+          card.innerHTML = `<div class="session-card-top"><div><strong>${escapeHtml(saved.name || "Sesi tanpa nama")}</strong><div class="subtitle">${(saved.participants||[]).length} anggota · ${(saved.drawn||[]).length} hasil</div></div>${saved.id === activeSessionId ? '<span class="tiny-label">Aktif</span>' : ''}</div><div class="subtitle">Terakhir disimpan ${escapeHtml(date)}</div><div class="session-card-actions"><button class="btn" type="button" data-open-session="${escapeHtml(saved.id)}">Buka sesi</button></div>`;
+          card.querySelector("[data-open-session]").addEventListener("click", () => applySession(readSessions()[saved.id]));
+          els.sessionList.appendChild(card);
+        });
+      }
+
+      async function saveLiveSession() {
+        try {
+          await publishState();
+          const snapshot = await requestLive("/api/session/save", {
+            method: "POST",
+            body: "{}"
+          });
+          lastSyncOk = true;
+          applyRemoteSnapshot(snapshot);
+        } catch (error) {
+          lastSyncOk = false;
+          console.warn("Sesi live gagal disimpan", error);
+          addAiMessage("Sesi live belum bisa disimpan karena server lokal tidak merespons.");
+          render();
+        }
+      }
+
+      async function loadLiveSession() {
+        try {
+          const snapshot = await requestLive("/api/session/load", {
+            method: "POST",
+            body: "{}"
+          });
+          lastSyncOk = true;
+          applyRemoteSnapshot(snapshot);
+        } catch (error) {
+          lastSyncOk = false;
+          console.warn("Sesi live gagal dimuat", error);
+          addAiMessage("Sesi live belum bisa dimuat karena server lokal tidak merespons.");
+          render();
+        }
+      }
+
+      function getWinnerCopy(name) {
+        const templates = [
+          {
+            label: "Pecah! Nama yang ditunggu akhirnya keluar!",
+            sub: `${name}, silakan maju dengan senyum paling mahal. Giliran hedon resmi jatuh ke tangan lo!`
+          },
+          {
+            label: "Jeng jeng jeng... pemenangnya adalah!",
+            sub: `${name} berhasil ditarik dari toples keramat. Satu ruangan wajib kasih tepuk tangan!`
+          },
+          {
+            label: "Toples sudah bicara, semua harap minggir!",
+            sub: `Malam ini milik ${name}. Nama keluar, vibes naik, arisan makin panas!`
+          },
+          {
+            label: "Selamat! Rezeki arisan merapat!",
+            sub: `${name}, status lo sekarang bukan peserta biasa. Lo adalah bintang kocokan hari ini!`
+          },
+          {
+            label: "Breaking news dari toples!",
+            sub: `${name} baru saja keluar sebagai nama pilihan. Hadirin, kasih applause yang niat!`
+          },
+          {
+            label: "Lampu sorot ke tengah, kita punya nama!",
+            sub: `${name}, toples memilih lo dengan penuh drama. Ini bukan kaleng-kaleng!`
+          }
+        ];
+        return templates[Math.floor(Math.random() * templates.length)];
+      }
+
+      function surpriseSteps() {
+        const lines = [
+          "Surprise! Siapa yang bakal keluar?",
+          "Toples hedon lagi milih nama paling hoki!",
+          "Kertasnya muter, nama sultan mulai mendekat!",
+          "Bentar lagi kebuka... siap-siap teriak!",
+          "Satu nama bakal jadi bintang arisan hari ini!",
+          "Jangan kedip, toples lagi kasih kode!",
+          "Ada nama yang mulai naik ke permukaan!",
+          "Hadirin, siapin tepuk tangan paling niat!",
+          "Sebentar lagi reveal besar dimulai!",
+          "Surprise pamungkas... nama keluar sekarang!"
+        ];
+        return [
+          { count: "3", text: lines[0] },
+          { count: "2", text: lines[1] },
+          { count: "1", text: lines[2] },
+          { count: "?", text: lines[3] },
+          { count: "!", text: lines[4] },
+          { count: "?", text: lines[5] },
+          { count: "!", text: lines[6] },
+          { count: "WOW", text: lines[7] },
+          { count: "!!", text: lines[8] },
+          { count: "GO", text: lines[9] }
+        ];
+      }
+
+      function showSurpriseStep(step) {
+        els.countdownNumber.textContent = step.count;
+        els.surpriseText.textContent = step.text;
+        els.countdownNumber.style.animation = "none";
+        void els.countdownNumber.offsetWidth;
+        els.countdownNumber.style.animation = "";
+        els.surprisePanel.classList.add("show");
+      }
+
+      function startSurpriseSequence(elapsedMs = 0) {
+        clearSurpriseSequence();
+        const steps = surpriseSteps();
+        const currentIndex = Math.min(steps.length - 1, Math.floor(elapsedMs / 1000));
+        showSurpriseStep(steps[currentIndex]);
+        steps.slice(currentIndex + 1).forEach((step, index) => {
+          const stepAt = (currentIndex + index + 1) * 1000;
+          drawSequenceTimers.push(window.setTimeout(() => showSurpriseStep(step), Math.max(0, stepAt - elapsedMs)));
+        });
+      }
+
+      function clearSurpriseSequence() {
+        drawSequenceTimers.forEach(timer => window.clearTimeout(timer));
+        drawSequenceTimers = [];
+        els.surprisePanel.classList.remove("show");
+      }
+
+      function getSupportedMp4Type() {
+        if (typeof MediaRecorder === "undefined" || typeof MediaRecorder.isTypeSupported !== "function") return "";
+        const candidates = [
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4;codecs=avc1.42001E,mp4a.40.2",
+          "video/mp4;codecs=avc1.42E01E",
+          "video/mp4"
+        ];
+        return candidates.find(type => MediaRecorder.isTypeSupported(type)) || "";
+      }
+
+      function recordingCapability() {
+        if (!window.isSecureContext) return { ok:false, reason:"Mode rekam hanya tersedia lewat HTTPS atau server lokal." };
+        if (!navigator.mediaDevices || typeof navigator.mediaDevices.getDisplayMedia !== "function") {
+          return { ok:false, reason:"Chrome ini belum menyediakan izin rekam layar untuk halaman ini." };
+        }
+        const mimeType = getSupportedMp4Type();
+        if (!mimeType) return { ok:false, reason:"Chrome di perangkat ini belum mendukung rekaman MP4 langsung. Kocokan tetap aman, tetapi mode rekam tidak diaktifkan." };
+        return { ok:true, mimeType };
+      }
+
+      function announceRecording(text) {
+        addAiMessage(text);
+        render();
+      }
+
+      function toggleRecordingMode() {
+        if (recordingPreparing || screenRecorder) return;
+        if (!recordingMode) {
+          const capability = recordingCapability();
+          if (!capability.ok) {
+            announceRecording(capability.reason);
+            return;
+          }
+          recordingMode = true;
+          announceRecording("Mode rekam MP4 aktif. Saat Kocok Toples ditekan, Chrome akan meminta lo memilih layar atau tab yang ingin direkam.");
+          return;
+        }
+        recordingMode = false;
+        announceRecording("Mode rekam dimatikan. Kocokan berikutnya tidak akan direkam.");
+      }
+
+      async function chooseRecordingFolder() {
+        if (recordingPreparing || screenRecorder) return;
+        if (typeof window.showDirectoryPicker !== "function") {
+          announceRecording("Pemilih folder tidak tersedia di browser ini. Rekaman MP4 akan masuk lewat unduhan browser.");
+          return;
+        }
+        try {
+          const directory = await window.showDirectoryPicker({ id:"arisan-hedonnn-recordings", mode:"readwrite", startIn:"videos" });
+          recordingDirectory = directory;
+          announceRecording(`Folder rekaman dipilih: ${directory.name}. Izin folder hanya dipegang halaman ini selama aplikasi masih terbuka.`);
+        } catch (error) {
+          if (error && error.name === "AbortError") return;
+          console.warn("Folder rekaman tidak bisa dipilih", error);
+          announceRecording("Folder belum bisa dipakai. Rekaman berikutnya akan masuk lewat unduhan browser.");
+        }
+      }
+
+      function safeRecordingName(value) {
+        const cleaned = String(value || "sesi-arisan")
+          .normalize("NFKC")
+          .replace(/[<>:\"/\\|?*\u0000-\u001F]/g, "-")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^[.\s-]+|[.\s-]+$/g, "")
+          .slice(0, 70);
+        return cleaned || "sesi-arisan";
+      }
+
+      function makeRecordingFileName() {
+        const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+        return `kocok-${safeRecordingName(activeSessionName)}-${stamp}.mp4`;
+      }
+
+      function downloadRecording(blob, fileName) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+      }
+
+      async function finalizeScreenRecording(recorder) {
+        const chunks = recordingChunks.slice();
+        const fileName = recordingFileName || makeRecordingFileName();
+        recordingChunks = [];
+        recordingFileName = "";
+        if (screenStream) screenStream.getTracks().forEach(track => track.stop());
+        screenStream = null;
+        if (screenRecorder === recorder) screenRecorder = null;
+        renderRecordingState();
+
+        if (!chunks.length) {
+          announceRecording("Rekaman berhenti sebelum data video sempat dibuat. Tidak ada file kosong yang disimpan.");
+          return;
+        }
+        const blob = new Blob(chunks, { type: recorder.mimeType || "video/mp4" });
+        if (!blob.size) {
+          announceRecording("Rekaman MP4 kosong, jadi file tidak disimpan.");
+          return;
+        }
+        if (recordingDirectory) {
+          try {
+            const handle = await recordingDirectory.getFileHandle(fileName, { create:true });
+            const writable = await handle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            announceRecording(`Rekaman MP4 tersimpan di folder ${recordingDirectory.name}: ${fileName}`);
+            return;
+          } catch (error) {
+            console.warn("Simpan rekaman ke folder gagal", error);
+          }
+        }
+        downloadRecording(blob, fileName);
+        announceRecording(`Rekaman MP4 selesai dan dikirim ke unduhan browser: ${fileName}`);
+      }
+
+      function stopScreenRecording(manual = false) {
+        window.clearTimeout(recordingStopTimer);
+        recordingStopTimer = null;
+        if (!screenRecorder) return;
+        if (manual) els.recordingStatus.textContent = "Menyelesaikan file MP4...";
+        if (screenRecorder.state !== "inactive") screenRecorder.stop();
+        if (screenStream) screenStream.getTracks().forEach(track => track.stop());
+      }
+
+      function scheduleRecordingStop() {
+        if (!screenRecorder || screenRecorder.state === "inactive") return;
+        window.clearTimeout(recordingStopTimer);
+        els.recordingStatus.textContent = "Pemenang keluar - menyelesaikan MP4...";
+        recordingStopTimer = window.setTimeout(() => stopScreenRecording(), 2500);
+      }
+
+      async function startScreenRecording() {
+        const capability = recordingCapability();
+        if (!capability.ok) {
+          announceRecording(capability.reason);
+          return false;
+        }
+        recordingPreparing = true;
+        renderStats();
+        try {
+          const stream = await navigator.mediaDevices.getDisplayMedia({
+            video: { frameRate: { ideal:30, max:30 } },
+            audio: true,
+            preferCurrentTab: true,
+            selfBrowserSurface: "include",
+            surfaceSwitching: "include",
+            systemAudio: "include"
+          });
+          const recorder = new MediaRecorder(stream, {
+            mimeType: capability.mimeType,
+            videoBitsPerSecond: 5000000
+          });
+          screenStream = stream;
+          screenRecorder = recorder;
+          recordingChunks = [];
+          recordingFileName = makeRecordingFileName();
+          recorder.addEventListener("dataavailable", event => {
+            if (event.data && event.data.size) recordingChunks.push(event.data);
+          });
+          recorder.addEventListener("stop", () => finalizeScreenRecording(recorder), { once:true });
+          recorder.addEventListener("error", event => {
+            console.warn("Perekam layar bermasalah", event.error || event);
+            announceRecording("Perekam layar berhenti karena Chrome melaporkan masalah. Data video yang sempat terekam tetap dicoba disimpan.");
+          });
+          const videoTrack = stream.getVideoTracks()[0];
+          if (videoTrack) videoTrack.addEventListener("ended", () => stopScreenRecording(), { once:true });
+          recorder.start(1000);
+          els.recordingStatus.textContent = "Merekam kocokan ke MP4";
+          renderRecordingState();
+          return true;
+        } catch (error) {
+          if (screenStream) screenStream.getTracks().forEach(track => track.stop());
+          screenStream = null;
+          screenRecorder = null;
+          recordingChunks = [];
+          recordingFileName = "";
+          const cancelled = error && (error.name === "NotAllowedError" || error.name === "AbortError");
+          announceRecording(cancelled
+            ? "Rekam layar dibatalkan. Toples belum dikocok, jadi lo bisa mencoba lagi tanpa ada hasil yang berubah."
+            : "Rekam layar gagal dimulai. Toples belum dikocok dan sesi tetap aman.");
+          return false;
+        } finally {
+          recordingPreparing = false;
+          renderStats();
+        }
+      }
+
+      async function requestDraw() {
+        if (isDrawing || recordingPreparing) return;
+        if (liveMode && !canEditLive()) { openLoginModal(); return; }
+        if (!availableNames().length) {
+          const started = await drawName();
+          if (started !== true) setSidebarCollapsed(false);
+          return;
+        }
+        if (recordingMode && !(await startScreenRecording())) {
+          setSidebarCollapsed(false);
+          return;
+        }
+        const started = await drawName();
+        if (started === true) {
+          setSidebarCollapsed(true);
+        } else {
+          if (screenRecorder) stopScreenRecording(true);
+          setSidebarCollapsed(false);
+        }
+      }
+
+      async function startLiveDraw() {
+        if (isDrawing) return false;
+        if (!canEditLive()) { openLoginModal(); return false; }
+        if (!liveReady) {
+          addAiMessage("Server live belum siap. Coba tunggu sebentar lalu tekan Kocok Toples lagi.");
+          render();
+          pullLiveState();
+          return false;
+        }
+        try {
+          const snapshot = await requestLive("/api/draw/start", {
+            method: "POST",
+            body: "{}"
+          });
+          lastSyncOk = true;
+          applyRemoteSnapshot(snapshot);
+          return true;
+        } catch (error) {
+          lastSyncOk = false;
+          console.warn("Kocok live gagal", error);
+          addAiMessage("Kocok live belum bisa jalan karena server lokal tidak merespons.");
+          render();
+          return false;
+        }
+      }
+
+      async function drawName() {
+        if (isDrawing) return false;
+        if (liveMode) {
+          return startLiveDraw();
+        }
+        const names = availableNames();
+        if (!names.length) {
+          addAiMessage("Belum ada nama tersisa untuk dikocok. Tambahkan peserta atau mulai Sesi Baru dulu.");
+          render();
+          return false;
+        }
+
+        isDrawing = true;
+        els.drawBtn.disabled = true;
+        els.winnerCard.classList.remove("show");
+        els.jarWrap.classList.add("shaking");
+        startShakeSound();
+        startSurpriseSequence();
+        addAiMessage("Surprise mode dimulai. Toples dikocok, semua siap-siap lihat nama yang bakal keluar.");
+        renderChat();
+
+        window.setTimeout(() => {
+          const winner = state.mode === "ordered" ? names[0] : names[Math.floor(Math.random() * names.length)];
+          state.drawn.push({
+            name: winner,
+            mode: state.mode,
+            time: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })
+          });
+          addActivity(`${winner} keluar sebagai pemenang`);
+
+          const winnerCopy = getWinnerCopy(winner);
+          els.winnerLabel.textContent = winnerCopy.label;
+          els.winnerName.textContent = winner;
+          els.winnerSub.textContent = winnerCopy.sub;
+          fitWinnerName();
+          els.jarWrap.classList.remove("shaking");
+          clearSurpriseSequence();
+          stopShakeSound();
+          playWinnerSound();
+          els.winnerCard.classList.add("show");
+          launchConfetti();
+          addAiMessage(`${winnerCopy.label} ${winnerCopy.sub}`);
+          isDrawing = false;
+          saveState();
+          render();
+          scheduleRecordingStop();
+        }, 10000);
+        return true;
+      }
+
+      function undoDraw() {
+        const last = state.drawn.pop();
+        if (last) {
+          addActivity(`Hasil ${last.name} dibatalkan dan dikembalikan ke toples`);
+          addAiMessage(`Hasil terakhir (${last.name}) dibatalkan dan namanya masuk lagi ke toples.`);
+          clearSurpriseSequence();
+          els.winnerCard.classList.remove("show");
+          setSidebarCollapsed(false);
+          saveState();
+          render();
+        }
+      }
+
+      function resetSession() {
+        openCreateSessionModal();
+      }
+
+      function clearAll() {
+        state.participants = [];
+        state.drawn = [];
+        addActivity("Seluruh daftar anggota dan riwayat dibersihkan");
+        clearSurpriseSequence();
+        els.winnerCard.classList.remove("show");
+        addAiMessage("Daftar peserta sudah dibersihkan. Toples kosong lagi.");
+        saveState();
+        render();
+      }
+
+      function addUserMessage(text) {
+        state.chat.push({ from: "user", text });
+        trimChat();
+        autoSaveActiveSession();
+      }
+
+      function addAiMessage(text) {
+        state.chat.push({ from: "ai", text });
+        trimChat();
+        autoSaveActiveSession();
+        if (!els.chatWidget.classList.contains("show")) {
+          chatUnreadCount += 1;
+          els.chatUnread.textContent = chatUnreadCount > 9 ? "9+" : chatUnreadCount;
+          els.chatUnread.classList.add("show");
+        }
+      }
+
+      function trimChat() {
+        if (state.chat.length > 60) state.chat = state.chat.slice(state.chat.length - 60);
+      }
+
+      function answerQuestion(question) {
+        const q = question.toLowerCase();
+        const left = availableNames();
+        const drawnNames = state.drawn.map(item => item.name);
+
+        if (q.includes("tersisa") || q.includes("sisa")) {
+          return left.length ? `Masih ada ${left.length} nama tersisa: ${left.join(", ")}.` : "Belum ada nama tersisa. Semua peserta sudah keluar.";
+        }
+        if (q.includes("sudah") || q.includes("keluar") || q.includes("riwayat")) {
+          return drawnNames.length ? `Yang sudah keluar: ${drawnNames.join(", ")}.` : "Belum ada nama yang keluar. Kita masih di awal sesi.";
+        }
+        if (q.includes("aturan") || q.includes("cara") || q.includes("jelaskan")) {
+          return "Aturannya simpel: masukkan nama peserta, pilih mode random atau berurutan, lalu kocok toples. Nama yang sudah keluar otomatis tidak ikut kocokan berikutnya. Pakai Sesi Baru kalau mau mulai ulang total.";
+        }
+        if (q.includes("mode") || q.includes("random") || q.includes("acak") || q.includes("urut")) {
+          return state.mode === "random"
+            ? "Sekarang mode random aktif. Sistem memilih nama secara acak dari daftar yang belum keluar."
+            : "Sekarang mode berurutan aktif. Sistem mengambil nama paling atas yang belum keluar.";
+        }
+        if (q.includes("siapa") && q.includes("terakhir")) {
+          const last = state.drawn[state.drawn.length - 1];
+          return last ? `Nama terakhir yang keluar adalah ${last.name}.` : "Belum ada hasil terakhir karena belum pernah dikocok.";
+        }
+        if (q.includes("mulai") || q.includes("lanjut")) {
+          return left.length ? `Siap. Ada ${left.length} nama yang bisa dikocok. Tekan Kocok Toples saat peserta sudah siap.` : "Toples belum punya nama tersisa. Tambahkan peserta atau mulai Sesi Baru dulu.";
+        }
+        return `Gue bantu baca kondisi sesi: total ${state.participants.length} peserta, ${drawnNames.length} sudah keluar, ${left.length} tersisa, mode ${state.mode === "random" ? "random" : "berurutan"}.`;
+      }
+
+      function renderParticipants() {
+        els.participantList.innerHTML = "";
+        if (!state.participants.length) {
+          els.participantList.innerHTML = `<div class="empty-note">Belum ada peserta. Masukkan nama dulu.</div>`;
+          return;
+        }
+        const used = new Set(state.drawn.map(item => item.name));
+        state.participants.forEach((name, index) => {
+          const item = document.createElement("div");
+          item.className = "person-item";
+          const status = used.has(name) ? "Sudah keluar" : `Urutan ${index + 1}`;
+          item.innerHTML = `<span class="person-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span><span class="tiny-label">${status}</span>`;
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "small-action";
+          remove.textContent = "Hapus";
+          remove.addEventListener("click", () => removeName(name));
+          item.appendChild(remove);
+          els.participantList.appendChild(item);
+        });
+      }
+
+      function renderJar() {
+        const names = availableNames();
+        const signature = names.join("\u001f");
+        if (signature === lastJarSignature) return;
+        lastJarSignature = signature;
+        els.jar.innerHTML = "";
+        names.slice(0, 30).forEach((name, index) => {
+          const paper = document.createElement("div");
+          paper.className = "paper";
+          paper.textContent = name.length > 12 ? `${name.slice(0, 11)}...` : name;
+          const x = 24 + ((index * 97) % 430);
+          const y = 58 + ((index * 67) % 350);
+          const r = -28 + ((index * 23) % 58);
+          paper.style.setProperty("--x", `${x}px`);
+          paper.style.setProperty("--y", `${y}px`);
+          paper.style.setProperty("--r", `${r}deg`);
+          paper.style.setProperty("--delay", `${randomBetween(-900, 250)}ms`);
+          paper.style.setProperty("--float-duration", `${randomBetween(1800, 3600)}ms`);
+          paper.style.setProperty("--shake-duration", `${randomBetween(280, 620)}ms`);
+          paper.style.setProperty("--fx1", `${randomBetween(-9, 9)}px`);
+          paper.style.setProperty("--fy1", `${randomBetween(-8, 8)}px`);
+          paper.style.setProperty("--fr1", `${randomBetween(-9, 9)}deg`);
+          paper.style.setProperty("--fx2", `${randomBetween(-12, 12)}px`);
+          paper.style.setProperty("--fy2", `${randomBetween(-10, 10)}px`);
+          paper.style.setProperty("--fr2", `${randomBetween(-13, 13)}deg`);
+          paper.style.setProperty("--sx1", `${randomBetween(-26, 26)}px`);
+          paper.style.setProperty("--sy1", `${randomBetween(-22, 22)}px`);
+          paper.style.setProperty("--sr1", `${randomBetween(-42, 42)}deg`);
+          paper.style.setProperty("--sx2", `${randomBetween(-38, 38)}px`);
+          paper.style.setProperty("--sy2", `${randomBetween(-34, 34)}px`);
+          paper.style.setProperty("--sr2", `${randomBetween(-70, 70)}deg`);
+          paper.style.setProperty("--sx3", `${randomBetween(-44, 44)}px`);
+          paper.style.setProperty("--sy3", `${randomBetween(-38, 38)}px`);
+          paper.style.setProperty("--sr3", `${randomBetween(-90, 90)}deg`);
+          paper.style.setProperty("--sx4", `${randomBetween(-32, 32)}px`);
+          paper.style.setProperty("--sy4", `${randomBetween(-30, 30)}px`);
+          paper.style.setProperty("--sr4", `${randomBetween(-68, 68)}deg`);
+          els.jar.appendChild(paper);
+        });
+      }
+
+      function randomBetween(min, max) {
+        return Math.round(min + Math.random() * (max - min));
+      }
+
+      function renderHistory() {
+        els.historyList.innerHTML = "";
+        els.historyCount.textContent = `${state.drawn.length} hasil`;
+        if (!state.drawn.length) {
+          els.historyList.innerHTML = `<div class="empty-note">Riwayat hasil masih kosong.</div>`;
+          return;
+        }
+        state.drawn.slice().reverse().forEach((item, reverseIndex) => {
+          const number = state.drawn.length - reverseIndex;
+          const row = document.createElement("div");
+          row.className = "history-item";
+          row.innerHTML = `<div><strong>${number}. ${escapeHtml(item.name)}</strong><div class="subtitle">${item.mode === "random" ? "Random" : "Berurutan"} - ${escapeHtml(item.time || "-")}</div></div>`;
+          els.historyList.appendChild(row);
+        });
+      }
+
+      function renderActivityLog() {
+        els.activityLog.innerHTML = "";
+        els.activityCount.textContent = `${state.activityLog.length} log`;
+        if (!state.activityLog.length) {
+          els.activityLog.innerHTML = `<div class="empty-note">Belum ada aktivitas di sesi ini.</div>`;
+          return;
+        }
+        state.activityLog.slice().reverse().forEach(item => {
+          const row = document.createElement("div");
+          row.className = "activity-item";
+          row.innerHTML = `<span class="activity-dot"></span><div><div class="activity-text">${escapeHtml(item.text)}</div><div class="activity-time">${escapeHtml(item.time || "-")}</div></div>`;
+          els.activityLog.appendChild(row);
+        });
+      }
+
+      function renderChat() {
+        els.chatLog.innerHTML = "";
+        state.chat.forEach(message => {
+          const bubble = document.createElement("div");
+          bubble.className = `message ${message.from === "user" ? "user" : "ai"}`;
+          bubble.textContent = message.text;
+          els.chatLog.appendChild(bubble);
+        });
+        els.chatLog.scrollTop = els.chatLog.scrollHeight;
+      }
+
+      function renderStats() {
+        const left = availableNames().length;
+        const canEdit = canEditLive();
+        els.participantCount.textContent = `${state.participants.length} nama`;
+        els.totalStat.textContent = state.participants.length;
+        els.leftStat.textContent = left;
+        els.drawnStat.textContent = state.drawn.length;
+        els.randomMode.classList.toggle("active", state.mode === "random");
+        els.orderedMode.classList.toggle("active", state.mode === "ordered");
+        els.drawBtn.disabled = !canEdit || isDrawing || recordingPreparing || left === 0;
+        els.continueBtn.disabled = !canEdit || isDrawing || recordingPreparing || left === 0;
+        els.undoBtn.disabled = !canEdit || isDrawing || state.drawn.length === 0;
+        els.saveHistoryBtn.disabled = state.drawn.length === 0;
+        els.saveSessionBtn.disabled = !canEdit || isDrawing || (state.participants.length === 0 && state.drawn.length === 0);
+        els.loadSessionBtn.disabled = !canEdit || isDrawing || !hasSavedSession();
+        els.resetSessionBtn.disabled = !canEdit || isDrawing;
+        const hasPlaylist = playlistFiles.length > 0;
+        els.audioPrevBtn.disabled = !hasPlaylist || playlistFiles.length < 2;
+        els.audioPlayPauseBtn.disabled = !hasPlaylist;
+        els.audioStopBtn.disabled = !hasPlaylist;
+        els.audioNextBtn.disabled = !hasPlaylist || playlistFiles.length < 2;
+        els.audioPlayPauseBtn.textContent = hasPlaylist && !els.localAudio.paused ? "Pause" : "Play";
+        const statusPrefix = liveMode ? (lastSyncOk ? "Live WiFi aktif - " : "Live WiFi putus - ") : "";
+        els.sessionStatus.textContent = statusPrefix + (activeSessionId ? `${activeSessionName} · ` : "Belum ada sesi · ") + (left
+          ? `${left} nama siap dikocok`
+          : state.participants.length
+            ? "Semua nama sudah keluar"
+            : hasSavedSession()
+              ? "Sesi baru aktif, ada sesi tersimpan"
+              : "Sesi baru aktif, toples kosong");
+        els.soundNote.textContent = localAudioLoaded
+          ? `${playlistFiles.length} lagu di playlist. Efek kocok toples tetap otomatis dari aplikasi.`
+          : "Pilih beberapa file musik dari perangkat. Efek kocok tetap otomatis dari aplikasi.";
+        renderRecordingState();
+        renderAuthStatus();
+        renderTrackList();
+      }
+
+      function renderRecordingState() {
+        const active = Boolean(screenRecorder && screenRecorder.state !== "inactive");
+        els.recordModeBtn.classList.toggle("active", recordingMode || active);
+        els.recordModeBtn.setAttribute("aria-pressed", String(recordingMode));
+        els.recordModeBtn.textContent = active ? "Sedang merekam" : recordingMode ? "Rekam: Aktif" : "Rekam: Mati";
+        els.recordModeBtn.disabled = recordingPreparing || active;
+        els.recordFolderBtn.classList.toggle("ready", Boolean(recordingDirectory));
+        els.recordFolderBtn.textContent = recordingDirectory
+          ? `Folder: ${recordingDirectory.name}`
+          : typeof window.showDirectoryPicker === "function"
+            ? "Pilih folder"
+            : "Simpan: Downloads";
+        els.recordFolderBtn.disabled = recordingPreparing || active;
+        els.recordingBadge.classList.toggle("show", active);
+      }
+
+      function renderTrackList() {
+        els.trackList.innerHTML = "";
+        if (!playlistFiles.length) {
+          els.trackList.innerHTML = `<div class="empty-note">Playlist masih kosong.</div>`;
+          return;
+        }
+        playlistFiles.forEach((file, index) => {
+          const row = document.createElement("div");
+          row.className = `track-item ${index === currentTrackIndex ? "active" : ""}`;
+          row.innerHTML = `<span>${index + 1}. ${escapeHtml(file.name)}</span><span>${index === currentTrackIndex ? "Aktif" : ""}</span>`;
+          row.addEventListener("click", () => {
+            const shouldPlay = !els.localAudio.paused;
+            loadTrack(index, shouldPlay);
+            render();
+          });
+          els.trackList.appendChild(row);
+        });
+      }
+
+      function render() {
+        renderParticipants();
+        renderJar();
+        renderHistory();
+        renderActivityLog();
+        renderChat();
+        renderStats();
+        if (els.sessionsDrawer.classList.contains("show")) renderSessionList();
+      }
+
+      function openDrawer(drawer) {
+        els.participantsDrawer.classList.remove("show");
+        els.sessionsDrawer.classList.remove("show");
+        drawer.classList.add("show");
+        els.drawerBackdrop.classList.add("show");
+        if (drawer === els.sessionsDrawer) renderSessionList();
+      }
+
+      function closeDrawers() {
+        els.participantsDrawer.classList.remove("show");
+        els.sessionsDrawer.classList.remove("show");
+        els.drawerBackdrop.classList.remove("show");
+      }
+
+      function toggleChat(force) {
+        const show = typeof force === "boolean" ? force : !els.chatWidget.classList.contains("show");
+        els.chatWidget.classList.toggle("show", show);
+        if (show) {
+          chatUnreadCount = 0;
+          els.chatUnread.classList.remove("show");
+          window.setTimeout(() => { els.chatLog.scrollTop = els.chatLog.scrollHeight; }, 30);
+        }
+      }
+
+      function restoreActiveSession() {
+        const saved = readSessions()[activeSessionId];
+        if (!saved) { activeSessionId = ""; return false; }
+        activeSessionName = saved.name || "Sesi tanpa nama";
+        state.participants = Array.isArray(saved.participants) ? saved.participants : [];
+        state.drawn = Array.isArray(saved.drawn) ? saved.drawn : [];
+        state.mode = saved.mode === "ordered" ? "ordered" : "random";
+        state.chat = Array.isArray(saved.chat) && saved.chat.length ? saved.chat : [{ ...openingChat }];
+        state.activityLog = Array.isArray(saved.activityLog) ? saved.activityLog : [];
+        return true;
+      }
+
+      function showSidePanel(panelName) {
+        const historyActive = panelName === "history";
+        els.historyTab.classList.toggle("active", historyActive);
+        els.activityTab.classList.toggle("active", !historyActive);
+        els.historyPanel.classList.toggle("active", historyActive);
+        els.activityPanel.classList.toggle("active", !historyActive);
+        els.historyTab.setAttribute("aria-selected", String(historyActive));
+        els.activityTab.setAttribute("aria-selected", String(!historyActive));
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      }
+
+      els.addNameBtn.addEventListener("click", () => {
+        addNames([els.singleName.value]);
+        els.singleName.value = "";
+        els.singleName.focus();
+      });
+      els.singleName.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          els.addNameBtn.click();
+        }
+      });
+      els.bulkBtn.addEventListener("click", () => {
+        addNames(els.bulkNames.value.split(/\n|,/));
+        els.bulkNames.value = "";
+      });
+      els.sampleBtn.addEventListener("click", () => addNames(sampleNames));
+      els.clearBtn.addEventListener("click", clearAll);
+      els.randomMode.addEventListener("click", () => setMode("random"));
+      els.orderedMode.addEventListener("click", () => setMode("ordered"));
+      els.drawBtn.addEventListener("click", requestDraw);
+      els.continueBtn.addEventListener("click", continueDraw);
+      els.closeWinnerBtn.addEventListener("click", () => closeWinnerCard(true));
+      els.audioFile.addEventListener("change", setLocalAudioFiles);
+      els.audioPrevBtn.addEventListener("click", previousTrack);
+      els.audioPlayPauseBtn.addEventListener("click", toggleLocalAudio);
+      els.audioStopBtn.addEventListener("click", stopLocalAudio);
+      els.audioNextBtn.addEventListener("click", () => nextTrack(true));
+      els.audioVolume.addEventListener("input", updateAudioVolume);
+      els.localAudio.addEventListener("ended", () => nextTrack(false));
+      els.localAudio.addEventListener("play", render);
+      els.localAudio.addEventListener("pause", render);
+      els.undoBtn.addEventListener("click", undoDraw);
+      els.saveHistoryBtn.addEventListener("click", saveHistoryFile);
+      els.saveSessionBtn.addEventListener("click", saveSession);
+      els.loadSessionBtn.addEventListener("click", loadSession);
+      els.resetSessionBtn.addEventListener("click", resetSession);
+      els.participantsMenuBtn.addEventListener("click", () => openDrawer(els.participantsDrawer));
+      els.sessionsMenuBtn.addEventListener("click", () => openDrawer(els.sessionsDrawer));
+      els.sidebarToggleBtn.addEventListener("click", () => setSidebarCollapsed(!sidebarCollapsed));
+      els.drawerBackdrop.addEventListener("click", closeDrawers);
+      document.querySelectorAll("[data-close-drawer]").forEach(button => button.addEventListener("click", closeDrawers));
+      els.createSessionFromDrawer.addEventListener("click", openCreateSessionModal);
+      els.createSessionForm.addEventListener("submit", createNewSession);
+      els.cancelCreateSession.addEventListener("click", () => els.createSessionModal.classList.remove("show"));
+      els.musicMenuBtn.addEventListener("click", () => els.musicPopover.classList.toggle("show"));
+      els.closeMusicBtn.addEventListener("click", () => els.musicPopover.classList.remove("show"));
+      els.recordModeBtn.addEventListener("click", toggleRecordingMode);
+      els.recordFolderBtn.addEventListener("click", chooseRecordingFolder);
+      els.stopRecordingBtn.addEventListener("click", () => stopScreenRecording(true));
+      els.chatFab.addEventListener("click", () => toggleChat());
+      els.closeChatBtn.addEventListener("click", () => toggleChat(false));
+      els.historyTab.addEventListener("click", () => showSidePanel("history"));
+      els.activityTab.addEventListener("click", () => showSidePanel("activity"));
+      els.authStatusBtn.addEventListener("click", () => {
+        if (authRequired && !authenticated) openLoginModal();
+        else if (authenticated) location.href = "/dashboard";
+      });
+      els.logoutAccountBtn.addEventListener("click", logoutAdmin);
+      els.loginForm.addEventListener("submit", loginAdmin);
+      els.cancelLoginBtn.addEventListener("click", () => els.loginModal.classList.remove("show"));
+      els.chatForm.addEventListener("submit", event => {
+        event.preventDefault();
+        const question = normalizeName(els.chatInput.value);
+        if (!question) return;
+        addUserMessage(question);
+        addAiMessage(answerQuestion(question));
+        els.chatInput.value = "";
+        saveState();
+        render();
+      });
+      document.querySelectorAll("[data-question]").forEach(button => {
+        button.addEventListener("click", () => {
+          const question = button.dataset.question;
+          addUserMessage(question);
+          addAiMessage(answerQuestion(question));
+          saveState();
+          render();
+        });
+      });
+      window.addEventListener("resize", fitWinnerName);
+      window.addEventListener("beforeunload", () => {
+        window.clearTimeout(recordingStopTimer);
+        if (screenStream) screenStream.getTracks().forEach(track => track.stop());
+      });
+
+      async function initLiveMode() {
+        await checkAuth();
+        liveReady = true;
+        if (activeSessionId && canEditLive()) await publishState();
+        else await pullLiveState();
+        window.setInterval(pullLiveState, 1200);
+      }
+
+      restoreActiveSession();
+      render();
+      if (liveMode) initLiveMode();
+    })();
+  </script>
+</div>
+</body>
+</html>
