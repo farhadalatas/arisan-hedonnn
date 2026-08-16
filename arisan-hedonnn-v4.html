@@ -655,7 +655,7 @@
         const method = String(options.method || "GET").toUpperCase();
         const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
         if (cloudEventId) headers["X-Arisan-Event"] = cloudEventId;
-        if (method !== "GET" && csrfToken && path !== "/api/auth/login") headers["X-CSRF-Token"] = csrfToken;
+        if (method !== "GET" && csrfToken && path !== "/api/account/login") headers["X-CSRF-Token"] = csrfToken;
         const response = await fetch(path, {
           cache: "no-store",
           credentials: "same-origin",
@@ -715,7 +715,7 @@
         els.loginSubmitBtn.disabled = true;
         els.loginFeedback.textContent = "Memeriksa password...";
         try {
-          const auth = await requestLive("/api/auth/login", { method:"POST", body:JSON.stringify({ password }) });
+          const auth = await requestLive("/api/account/login", { method:"POST", body:JSON.stringify({ password }) });
           authRequired = Boolean(auth.required);
           authenticated = Boolean(auth.authenticated);
           csrfToken = String(auth.csrfToken || "");
